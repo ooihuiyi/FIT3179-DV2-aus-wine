@@ -1,8 +1,7 @@
-﻿state_name,crush_2025_tonnes,crush_2026_tonnes,percentage_change,national_crush_share_2026_%,
+state_name,crush_2025_tonnes,crush_2026_tonnes,percentage_change,national_crush_share_2026,
 New South Wales,480241,375603,-21.79,29.68,
 Queensland,781,620,-20.61,0.05,
 South Australia,750918,658087,-12.36,52.00,
 Tasmania,18845,11219,-40.47,0.89,
 Victoria,279021,191765,-31.27,15.15,
-Western Australia,42200,28378,-32.75,2.24,
-,,,,,
+Western Australia,42200,28378,-32.75,2.24
