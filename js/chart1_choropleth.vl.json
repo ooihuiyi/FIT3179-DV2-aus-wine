@@ -1,0 +1,113 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "South Australia crushes over half of Australia's grapes",
+    "subtitle": "Share of national grape crush by state, 2026 vintage"
+  },
+  "width": 450,
+  "height": 420,
+  "projection": {
+    "type": "conicEqualArea",
+    "parallels": [-18, -36],
+    "rotate": [-134, 0]
+  },
+  "data": {
+    "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/js/STE_2026_AUST_GDA2020.json",
+    "format": {"type": "topojson", "feature": "aus_states"}
+  },
+  "encoding": {
+    "color": {
+      "title": "Share of national crush (%)",
+      "scale": {
+        "domain": ["40 or more", "20 to 40", "5 to 20", "Under 5", "No data"],
+        "range": ["#54278f", "#756bb1", "#9e9ac8", "#dadaeb", "lightgray"]
+      },
+      "legend": {
+        "orient": "none",
+        "legendX": 430,
+        "legendY": 50,
+        "symbolType": "square",
+        "symbolSize": 180,
+        "titleLimit": 250
+      }
+    }
+  },
+  "layer": [
+    {
+      "transform": [
+        {
+          "calculate": "'No wine data for ' + datum.properties.STE_NAME26",
+          "as": "note"
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "white", "strokeWidth": 1.5},
+      "encoding": {"color": {"datum": "No data"}, "tooltip": {"field": "note"}}
+    },
+    {
+      "transform": [
+        {
+          "lookup": "properties.STE_NAME26",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/crush_by_state.csv"
+            },
+            "key": "state_name",
+            "fields": [
+              "national_crush_share_2026",
+              "crush_2025_tonnes",
+              "crush_2026_tonnes",
+              "percentage_change"
+            ]
+          }
+        },
+        {"filter": "isValid(datum.national_crush_share_2026)"},
+        {
+          "calculate": "datum.national_crush_share_2026 >= 40 ? '40 or more' : datum.national_crush_share_2026 >= 20 ? '20 to 40' : datum.national_crush_share_2026 >= 5 ? '5 to 20' : 'Under 5'",
+          "as": "share_class"
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "white", "strokeWidth": 1.5},
+      "encoding": {
+        "color": {"field": "share_class", "type": "ordinal"},
+        "tooltip": [
+          {
+            "field": "properties.STE_NAME26",
+            "type": "nominal",
+            "title": "State"
+          },
+          {
+            "field": "crush_2026_tonnes",
+            "type": "quantitative",
+            "format": ",.0f",
+            "title": "Crush 2026 (tonnes)"
+          },
+          {
+            "field": "national_crush_share_2026",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Share of national crush (%)"
+          },
+          {
+            "field": "percentage_change",
+            "type": "quantitative",
+            "format": "+.1f",
+            "title": "Change from 2025 (%)"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "font": "Helvetica Neue, Arial, sans-serif",
+    "title": {
+      "font": "Georgia, serif",
+      "fontSize": 18,
+      "anchor": "start",
+      "subtitleFont": "Helvetica Neue, Arial, sans-serif",
+      "subtitleFontSize": 13,
+      "subtitlePadding": 4
+    },
+    "legend": {"titleFontSize": 12, "labelFontSize": 12},
+    "view": {"stroke": null}
+  }
+}
