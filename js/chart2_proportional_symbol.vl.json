@@ -6,8 +6,9 @@
       "but earn the least per tonne"
     ],
     "subtitle": [
-      "Wine regions, 2026 vintage. Circle area = tonnes crushed;",
-      "colour = average grape price per tonne."
+      "Wine regions, 2026 vintage.",
+      "Circle area = tonnes crushed",
+      "Colour = average grape price per tonne."
     ]
   },
   "config": {
@@ -45,7 +46,8 @@
                   [136.5, -38.5],
                   [136.5, -32]
                 ]
-              }
+              },
+              "properties": {}
             }
           },
           "layer": [
@@ -186,7 +188,7 @@
                         "orient": "none",
                         "direction": "horizontal",
                         "legendX": 540,
-                        "legendY": 280,
+                        "legendY": 278,
                         "columnPadding": 10,
                         "labelOffset": 4
                       }
@@ -347,7 +349,8 @@
                   [154, -43.8],
                   [113, -43.8]
                 ]
-              }
+              },
+              "properties": {}
             },
             "extent": [[0, 56], [160, 192]]
           },
