@@ -1,15 +1,15 @@
-﻿region,state_name,zone_type,crush_2025_tonnes,crush_2026_tonnes,percentage_change,latitude,longitude
-Barossa Valley,South Australia,Cool/temperate,53100,41972,-20.96,-34.932900,138.553300
-Padthaway,South Australia,Cool/temperate,36878,26391,-28.44,-36.602200,140.495400
-McLaren Vale,South Australia,Cool/temperate,36104,27645,-23.43,-35.208300,138.528400
-Coonawarra,South Australia,Cool/temperate,32457,32302,-0.48,-37.375800,140.836800
-Langhorne Creek,South Australia,Cool/temperate,31467,26066,-17.16,-35.295700,139.036000
-Margaret River,Western Australia,Cool/temperate,25661,17133,-33.23,-33.948800,115.074000
-Adelaide Hills,South Australia,Cool/temperate,24763,21885,-11.62,-35.002000,138.825600
-King Valley,Victoria,Cool/temperate,22126,16783,-24.15,-36.761100,146.409100
-Clare Valley,South Australia,Cool/temperate,17579,13226,-24.76,-33.866600,138.622000
-Tasmania,Tasmania,Cool/temperate,17255,9772,-43.37,-42.886900,147.322200
-Wrattonbully,South Australia,Cool/temperate,16927,14213,-16.03,-36.957500,140.741300
-Riverland,South Australia,Warm inland,401459,339195,-15.51,-34.383333,139.850000
-Riverina,New South Wales,Warm inland,275648,204506,-25.81,-34.550000,146.033333
-Murray Darling - Swan Hill,New South Wales and Victoria,Warm inland,329621,237317,-27.99,-34.416667,142.116667
+﻿region,state_name,zone_type,crush_2025_tonnes,crush_2026_tonnes,percentage_change,latitude,longitude,symbol_latitude,symbol_longitude
+Barossa Valley,South Australia,Cool/temperate,53100,41972,-20.96,-34.932900,138.553300,34.45,137.9
+Padthaway,South Australia,Cool/temperate,36878,26391,-28.44,-36.602200,140.495400,-36.602200,140.495400 
+McLaren Vale,South Australia,Cool/temperate,36104,27645,-23.43,-35.208300,138.528400,-35.65,137.75
+Coonawarra,South Australia,Cool/temperate,32457,32302,-0.48,-37.375800,140.836800,-37.375800,140.836800
+Langhorne Creek,South Australia,Cool/temperate,31467,26066,-17.16,-35.295700,139.036000,-35.95, 139.0
+Margaret River,Western Australia,Cool/temperate,25661,17133,-33.23,-33.948800,115.074000,-33.948800,115.074000
+Adelaide Hills,South Australia,Cool/temperate,24763,21885,-11.62,-35.002000,138.825600,-35.05,137.45
+King Valley,Victoria,Cool/temperate,22126,16783,-24.15,-36.761100,146.409100,-36.761100,146.409100
+Clare Valley,South Australia,Cool/temperate,17579,13226,-24.76,-33.866600,138.622000,-33.866600,138.622000
+Tasmania,Tasmania,Cool/temperate,17255,9772,-43.37,-42.886900,147.322200,-42.886900,147.322200
+Wrattonbully,South Australia,Cool/temperate,16927,14213,-16.03,-36.957500,140.741300,-36.957500,140.741300
+Riverland,South Australia,Warm inland,401459,339195,-15.51,-34.383333,139.850000,-34.383333,139.850000
+Riverina,New South Wales,Warm inland,275648,204506,-25.81,-34.550000,146.033333,-34.550000,146.033333
+Murray Darling - Swan Hill,New South Wales and Victoria,Warm inland,329621,237317,-27.99,-34.416667,142.116667,-34.416667,142.116667
