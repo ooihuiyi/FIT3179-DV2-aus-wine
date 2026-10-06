@@ -276,11 +276,11 @@
           ]
         },
         {
-          "calculate": "'$' + format(datum.value_aud_million, ',.0f') + ' million (index ' + format(datum['Value ($)'], '.0f') + ')'",
+          "calculate": "'$' + format(datum.value_aud_million, ',.0f') + ' (index ' + format(datum['Value ($)'], '.0f') + ')'",
           "as": "value_text"
         },
         {
-          "calculate": "format(datum.volume_million_litre, ',.1f') + ' million litres (index ' + format(datum['Volume (litres)'], '.0f') + ')'",
+          "calculate": "format(datum.volume_million_litre, ',.1f') + ' (index ' + format(datum['Volume (litres)'], '.0f') + ')'",
           "as": "volume_text"
         }
       ],
@@ -333,12 +333,12 @@
           {
             "field": "value_text",
             "type": "nominal",
-            "title": "Export value"
+            "title": "Export value(million)"
           },
           {
             "field": "volume_text",
             "type": "nominal",
-            "title": "Export volume"
+            "title": "Export volume(million litres)"
           }
         ]
       }
