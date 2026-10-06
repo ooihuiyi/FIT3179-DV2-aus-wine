@@ -1,0 +1,460 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Dumbbell chart. Each region's 2025 and 2026 crush from gi_regions.csv on a log axis, so the gap between dots reflects the percentage fall. Regions are sorted from largest fall to smallest.",
+  "title": {
+    "text": [
+      "Even neighbouring regions fell by",
+      "very different amounts"
+    ],
+    "subtitle": [
+      "Grape crush by wine region, 2025 and 2026 vintage.",
+      "Log scale: equal gaps mean equal percentage falls."
+    ]
+  },
+  "width": 600,
+  "height": 380,
+  "data": {
+    "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/gi_regions.csv"
+  },
+  "transform": [
+    {
+      "calculate": "-datum.percentage_change",
+      "as": "fall"
+    },
+    {
+      "fold": [
+        "crush_2025_tonnes",
+        "crush_2026_tonnes"
+      ],
+      "as": [
+        "year_field",
+        "tonnes"
+      ]
+    },
+    {
+      "calculate": "datum.year_field == 'crush_2025_tonnes' ? '2025' : '2026'",
+      "as": "year"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "color": "#c8c8c8",
+        "strokeWidth": 2.5
+      },
+      "encoding": {
+        "x": {
+          "field": "tonnes",
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "domain": [
+              9000,
+              420000
+            ],
+            "nice": false
+          },
+          "title": "Tonnes crushed (log scale)",
+          "axis": {
+            "values": [
+              10000,
+              20000,
+              50000,
+              100000,
+              200000,
+              400000
+            ],
+            "labelExpr": "format(datum.value / 1000, '.0f') + 'k'",
+            "grid": true,
+            "gridColor": "#ececec"
+          }
+        },
+        "detail": {
+          "field": "region"
+        },
+        "y": {
+          "field": "region",
+          "type": "nominal",
+          "sort": {
+            "field": "fall",
+            "op": "max",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelPadding": 8,
+            "labelFontSize": 12,
+            "labelColor": "#333",
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'Coonawarra' || datum.value == 'Padthaway'",
+                "value": 700
+              },
+              "value": 400
+            }
+          }
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 90,
+        "opacity": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "tonnes",
+          "type": "quantitative"
+        },
+        "color": {
+          "field": "year",
+          "type": "nominal",
+          "title": "Vintage",
+          "scale": {
+            "domain": [
+              "2025",
+              "2026"
+            ],
+            "range": [
+              "#dfc27d",
+              "#8c510a"
+            ]
+          },
+          "legend": null
+        },
+        "tooltip": [
+          {
+            "field": "region",
+            "type": "nominal",
+            "title": "Region"
+          },
+          {
+            "field": "state_name",
+            "type": "nominal",
+            "title": "State"
+          },
+          {
+            "field": "year",
+            "type": "nominal",
+            "title": "Vintage"
+          },
+          {
+            "field": "tonnes",
+            "type": "quantitative",
+            "format": ",.0f",
+            "title": "Crush (tonnes)"
+          },
+          {
+            "field": "fall",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Fall from 2025 (%)"
+          }
+        ],
+        "y": {
+          "field": "region",
+          "type": "nominal",
+          "sort": {
+            "field": "fall",
+            "op": "max",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelPadding": 8,
+            "labelFontSize": 12,
+            "labelColor": "#333",
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'Coonawarra' || datum.value == 'Padthaway'",
+                "value": 700
+              },
+              "value": 400
+            }
+          }
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.year == '2025'"
+        },
+        {
+          "calculate": "datum.fall < 1 ? 'under 1%' : format(datum.fall, '.0f') + '%'",
+          "as": "fall_text"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 9,
+        "fontSize": 11,
+        "color": "#555"
+      },
+      "encoding": {
+        "x": {
+          "field": "tonnes",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "fall_text"
+        },
+        "y": {
+          "field": "region",
+          "type": "nominal",
+          "sort": {
+            "field": "fall",
+            "op": "max",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelPadding": 8,
+            "labelFontSize": 12,
+            "labelColor": "#333",
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'Coonawarra' || datum.value == 'Padthaway'",
+                "value": 700
+              },
+              "value": 400
+            }
+          }
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.region == 'Tasmania'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "dy": -15,
+        "fontSize": 11,
+        "fontWeight": 700
+      },
+      "encoding": {
+        "x": {
+          "field": "tonnes",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "region",
+          "type": "nominal",
+          "sort": {
+            "field": "fall",
+            "op": "max",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelPadding": 8,
+            "labelFontSize": 12,
+            "labelColor": "#333",
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'Coonawarra' || datum.value == 'Padthaway'",
+                "value": 700
+              },
+              "value": 400
+            }
+          }
+        },
+        "text": {
+          "field": "year"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.year == '2025'",
+            "value": "#b08a2e"
+          },
+          "value": "#8c510a"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.year == '2025' && (datum.region == 'Padthaway' || datum.region == 'Coonawarra')"
+        },
+        {
+          "calculate": "datum.region == 'Padthaway' ? 'Limestone Coast, beside Coonawarra' : 'Barely changed, unlike Padthaway'",
+          "as": "note"
+        },
+        {
+          "calculate": "datum.region == 'Padthaway' ? 66000 : 72000",
+          "as": "note_x"
+        },
+        {
+          "calculate": "datum.region == 'Padthaway' ? 49000 : 54000",
+          "as": "line_x"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#9a9a9a",
+        "strokeWidth": 0.8
+      },
+      "encoding": {
+        "x": {
+          "field": "line_x",
+          "type": "quantitative"
+        },
+        "x2": {
+          "field": "note_x"
+        },
+        "y": {
+          "field": "region",
+          "type": "nominal",
+          "sort": {
+            "field": "fall",
+            "op": "max",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelPadding": 8,
+            "labelFontSize": 12,
+            "labelColor": "#333",
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'Coonawarra' || datum.value == 'Padthaway'",
+                "value": 700
+              },
+              "value": 400
+            }
+          }
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.year == '2025' && (datum.region == 'Padthaway' || datum.region == 'Coonawarra')"
+        },
+        {
+          "calculate": "datum.region == 'Padthaway' ? 'Limestone Coast, beside Coonawarra' : 'Barely changed, unlike Padthaway'",
+          "as": "note"
+        },
+        {
+          "calculate": "datum.region == 'Padthaway' ? 66000 : 72000",
+          "as": "note_x"
+        },
+        {
+          "calculate": "datum.region == 'Padthaway' ? 49000 : 54000",
+          "as": "line_x"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "fontSize": 11,
+        "fontStyle": "italic",
+        "color": "#222",
+        "dx": 4
+      },
+      "encoding": {
+        "x": {
+          "field": "note_x",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "region",
+          "type": "nominal",
+          "sort": {
+            "field": "fall",
+            "op": "max",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelPadding": 8,
+            "labelFontSize": 12,
+            "labelColor": "#333",
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'Coonawarra' || datum.value == 'Padthaway'",
+                "value": 700
+              },
+              "value": 400
+            }
+          }
+        },
+        "text": {
+          "field": "note"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "t": [
+              "Source: Wine Australia, National Vintage Report 2026,",
+              "wineaustralia.com/market-insights/national-vintage-report"
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "x": -160,
+        "y": 425,
+        "fontSize": 10,
+        "color": "#666",
+        "lineHeight": 13
+      },
+      "encoding": {
+        "text": {
+          "field": "t"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
+    "title": {
+      "font": "Fraunces, Georgia, serif",
+      "fontSize": 18,
+      "fontWeight": 600,
+      "anchor": "start",
+      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
+      "subtitleFontSize": 13,
+      "subtitlePadding": 4
+    },
+    "axis": {
+      "labelColor": "#555",
+      "titleColor": "#333",
+      "titleFontWeight": "normal",
+      "domainColor": "#bbbbbb",
+      "tickColor": "#bbbbbb"
+    },
+    "legend": {
+      "titleFontSize": 12,
+      "labelFontSize": 12,
+      "titleFontWeight": "normal"
+    },
+    "view": {
+      "stroke": null
+    }
+  }
+}
