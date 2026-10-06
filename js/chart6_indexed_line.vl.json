@@ -1,0 +1,447 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Line chart of Australian wine exports from 2015 to 2026, indexed so 2015 equals 100. Export volume fell 17% while export value rose 21%, peaking in 2019 and dipping during China's tariffs.",
+  "title": {
+    "text": "Since 2015, export litres fell 17% but dollars rose 21%",
+    "subtitle": [
+      "Australian wine exports, indexed to 2015 = 100.",
+      "Above 100 = more than in 2015; below 100 = less."
+    ]
+  },
+  "width": 560,
+  "height": 340,
+  "data": {
+    "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_sales_historical.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "volume_million_litre": "number",
+        "value_aud_million": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "toNumber(isValid(datum.full_year) ? datum.full_year : datum['\ufefffull_year'])",
+      "as": "full_year"
+    },
+    {
+      "window": [
+        {
+          "op": "first_value",
+          "field": "volume_million_litre",
+          "as": "vol_base"
+        },
+        {
+          "op": "first_value",
+          "field": "value_aud_million",
+          "as": "val_base"
+        }
+      ],
+      "sort": [
+        {
+          "field": "full_year"
+        }
+      ],
+      "frame": [
+        null,
+        null
+      ]
+    },
+    {
+      "calculate": "datum.volume_million_litre / datum.vol_base * 100",
+      "as": "Volume (litres)"
+    },
+    {
+      "calculate": "datum.value_aud_million / datum.val_base * 100",
+      "as": "Value ($)"
+    },
+    {
+      "fold": [
+        "Value ($)",
+        "Volume (litres)"
+      ],
+      "as": [
+        "measure",
+        "index"
+      ]
+    },
+    {
+      "calculate": "datum.measure == 'Value ($)' ? '$' + format(datum.value_aud_million, ',.0f') + ' million' : format(datum.volume_million_litre, ',.1f') + ' million litres'",
+      "as": "actual"
+    }
+  ],
+  "layer": [
+    {
+      "data": {
+        "values": [
+          {
+            "start": 2021,
+            "end": 2023
+          }
+        ]
+      },
+      "mark": {
+        "type": "rect",
+        "color": "#f2f2f2"
+      },
+      "encoding": {
+        "x": {
+          "field": "start",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              2015,
+              2026
+            ],
+            "zero": false
+          }
+        },
+        "x2": {
+          "field": "end"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "x": 2021.3,
+            "t": [
+              "China tariffs",
+              "began in 2021.",
+              "Export value",
+              "fell 27% from",
+              "2021 to 2023."
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "y": 200,
+        "fontSize": 11,
+        "color": "#555",
+        "lineHeight": 14
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              2015,
+              2026
+            ],
+            "zero": false
+          }
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "rule",
+        "color": "#9a9a9a",
+        "strokeDash": [
+          3,
+          3
+        ]
+      },
+      "encoding": {
+        "y": {
+          "datum": 100,
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 2.5,
+        "point": {
+          "size": 35,
+          "filled": true
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "full_year",
+          "type": "quantitative",
+          "title": null,
+          "scale": {
+            "domain": [
+              2015,
+              2026
+            ],
+            "zero": false
+          },
+          "axis": {
+            "format": "d",
+            "values": [
+              2015,
+              2016,
+              2017,
+              2018,
+              2019,
+              2020,
+              2021,
+              2022,
+              2023,
+              2024,
+              2025,
+              2026
+            ],
+            "grid": false,
+            "labelAngle": 0
+          }
+        },
+        "y": {
+          "field": "index",
+          "type": "quantitative",
+          "title": "Index (2015 = 100)",
+          "scale": {
+            "domain": [
+              0,
+              160
+            ],
+            "zero": true
+          },
+          "axis": {
+            "values": [
+              0,
+              20,
+              40,
+              60,
+              80,
+              100,
+              120,
+              140,
+              160
+            ],
+            "gridColor": "#ececec"
+          }
+        },
+        "color": {
+          "field": "measure",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Value ($)",
+              "Volume (litres)"
+            ],
+            "range": [
+              "#c51b7d",
+              "#01807a"
+            ]
+          },
+          "legend": null
+        },
+        "strokeDash": {
+          "field": "measure",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Value ($)",
+              "Volume (litres)"
+            ],
+            "range": [
+              [
+                1,
+                0
+              ],
+              [
+                6,
+                4
+              ]
+            ]
+          },
+          "legend": null
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "pivot": "measure",
+          "value": "index",
+          "groupby": [
+            "full_year",
+            "volume_million_litre",
+            "value_aud_million"
+          ]
+        },
+        {
+          "calculate": "'$' + format(datum.value_aud_million, ',.0f') + ' million (index ' + format(datum['Value ($)'], '.0f') + ')'",
+          "as": "value_text"
+        },
+        {
+          "calculate": "format(datum.volume_million_litre, ',.1f') + ' million litres (index ' + format(datum['Volume (litres)'], '.0f') + ')'",
+          "as": "volume_text"
+        }
+      ],
+      "params": [
+        {
+          "name": "year_hover",
+          "select": {
+            "type": "point",
+            "fields": [
+              "full_year"
+            ],
+            "nearest": true,
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#888888",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "full_year",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              2015,
+              2026
+            ],
+            "zero": false
+          }
+        },
+        "opacity": {
+          "condition": {
+            "param": "year_hover",
+            "empty": false,
+            "value": 0.6
+          },
+          "value": 0
+        },
+        "tooltip": [
+          {
+            "field": "full_year",
+            "type": "quantitative",
+            "format": "d",
+            "title": "Year"
+          },
+          {
+            "field": "value_text",
+            "type": "nominal",
+            "title": "Export value"
+          },
+          {
+            "field": "volume_text",
+            "type": "nominal",
+            "title": "Export volume"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.full_year == 2026"
+        },
+        {
+          "calculate": "datum.measure == 'Value ($)' ? 'Value ($) +' + format(datum.index - 100, '.0f') + '%' : 'Volume (litres) ' + format(datum.index - 100, '.0f') + '%'",
+          "as": "end_label"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 9,
+        "fontSize": 12,
+        "fontWeight": 700
+      },
+      "encoding": {
+        "x": {
+          "field": "full_year",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              2015,
+              2026
+            ],
+            "zero": false
+          }
+        },
+        "y": {
+          "field": "index",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              160
+            ],
+            "zero": true
+          }
+        },
+        "text": {
+          "field": "end_label"
+        },
+        "color": {
+          "field": "measure",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "t": [
+              "Source: Wine Australia, Export Report,",
+              "wineaustralia.com/market-insights"
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "x": -40,
+        "y": 370,
+        "fontSize": 10,
+        "color": "#666",
+        "lineHeight": 13
+      },
+      "encoding": {
+        "text": {
+          "field": "t"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
+    "title": {
+      "font": "Fraunces, Georgia, serif",
+      "fontSize": 18,
+      "fontWeight": 600,
+      "anchor": "start",
+      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
+      "subtitleFontSize": 13,
+      "subtitlePadding": 4
+    },
+    "axis": {
+      "labelColor": "#555",
+      "titleColor": "#333",
+      "titleFontWeight": "normal",
+      "domainColor": "#bbbbbb",
+      "tickColor": "#bbbbbb",
+      "labelFontSize": 11,
+      "titleFontSize": 12
+    },
+    "view": {
+      "stroke": null
+    }
+  }
+}
