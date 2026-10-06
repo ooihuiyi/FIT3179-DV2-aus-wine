@@ -8,7 +8,8 @@
     ],
     "subtitle": [
       "Tonnes of grapes lost by state, 2025 to 2026 vintage.",
-      "Each bar starts where the previous state's ends."
+      "Each bar starts where the previous state's ends.",
+      "Bar colours match each state in the waffle chart."
     ]
   },
   "width": 460,
@@ -21,35 +22,83 @@
       "calculate": "datum.crush_2025_tonnes - datum.crush_2026_tonnes",
       "as": "lost"
     },
-    {"joinaggregate": [{"op": "sum", "field": "lost", "as": "total_lost"}]},
-    {"calculate": "datum.lost / datum.total_lost * 100", "as": "pct"}
+    {
+      "joinaggregate": [
+        {
+          "op": "sum",
+          "field": "lost",
+          "as": "total_lost"
+        }
+      ]
+    },
+    {
+      "calculate": "datum.lost / datum.total_lost * 100",
+      "as": "pct"
+    }
   ],
   "layer": [
     {
       "transform": [
         {
           "window": [
-            {"op": "sum", "field": "lost", "as": "end"},
-            {"op": "row_number", "as": "order"},
-            {"op": "lead", "field": "state_name", "as": "next"}
+            {
+              "op": "sum",
+              "field": "lost",
+              "as": "end"
+            },
+            {
+              "op": "row_number",
+              "as": "order"
+            },
+            {
+              "op": "lead",
+              "field": "state_name",
+              "as": "next"
+            }
           ],
-          "sort": [{"field": "lost", "order": "descending"}],
-          "frame": [null, 0]
+          "sort": [
+            {
+              "field": "lost",
+              "order": "descending"
+            }
+          ],
+          "frame": [
+            null,
+            0
+          ]
         },
         {
           "calculate": "isValid(datum.next) ? datum.next : 'Total lost'",
           "as": "next"
         },
-        {"calculate": "datum.state_name", "as": "label"}
+        {
+          "calculate": "datum.state_name",
+          "as": "label"
+        }
       ],
-      "mark": {"type": "rule", "color": "#999999", "strokeDash": [2, 2]},
+      "mark": {
+        "type": "rule",
+        "color": "#999999",
+        "strokeDash": [
+          2,
+          2
+        ]
+      },
       "encoding": {
-        "x": {"field": "end", "type": "quantitative"},
-        "y2": {"field": "next"},
+        "x": {
+          "field": "end",
+          "type": "quantitative"
+        },
+        "y2": {
+          "field": "next"
+        },
         "y": {
           "field": "label",
           "type": "nominal",
-          "sort": {"field": "order", "op": "min"},
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
           "title": null,
           "axis": {
             "ticks": false,
@@ -65,14 +114,35 @@
       "transform": [
         {
           "window": [
-            {"op": "sum", "field": "lost", "as": "end"},
-            {"op": "row_number", "as": "order"}
+            {
+              "op": "sum",
+              "field": "lost",
+              "as": "end"
+            },
+            {
+              "op": "row_number",
+              "as": "order"
+            }
           ],
-          "sort": [{"field": "lost", "order": "descending"}],
-          "frame": [null, 0]
+          "sort": [
+            {
+              "field": "lost",
+              "order": "descending"
+            }
+          ],
+          "frame": [
+            null,
+            0
+          ]
         },
-        {"calculate": "datum.end - datum.lost", "as": "start"},
-        {"calculate": "datum.state_name", "as": "label"},
+        {
+          "calculate": "datum.end - datum.lost",
+          "as": "start"
+        },
+        {
+          "calculate": "datum.state_name",
+          "as": "label"
+        },
         {
           "calculate": "indexof(['South Australia', 'New South Wales', 'Victoria'], datum.state_name) >= 0 ? datum.state_name : 'WA, Tas and Qld'",
           "as": "group"
@@ -96,7 +166,9 @@
             "labelExpr": "datum.value == 0 ? '0' : format(datum.value / 1000, '.0f') + 'k'"
           }
         },
-        "x2": {"field": "end"},
+        "x2": {
+          "field": "end"
+        },
         "color": {
           "field": "group",
           "type": "nominal",
@@ -107,12 +179,21 @@
               "Victoria",
               "WA, Tas and Qld"
             ],
-            "range": ["#330163", "#7e609c", "#b7aed6", "#ebe8f5"]
+            "range": [
+              "#330163",
+              "#7e609c",
+              "#b7aed6",
+              "#ebe8f5"
+            ]
           },
           "legend": null
         },
         "tooltip": [
-          {"field": "state_name", "type": "nominal", "title": "State"},
+          {
+            "field": "state_name",
+            "type": "nominal",
+            "title": "State"
+          },
           {
             "field": "crush_2025_tonnes",
             "type": "quantitative",
@@ -141,7 +222,10 @@
         "y": {
           "field": "label",
           "type": "nominal",
-          "sort": {"field": "order", "op": "min"},
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
           "title": null,
           "axis": {
             "ticks": false,
@@ -157,13 +241,31 @@
       "transform": [
         {
           "window": [
-            {"op": "sum", "field": "lost", "as": "end"},
-            {"op": "row_number", "as": "order"}
+            {
+              "op": "sum",
+              "field": "lost",
+              "as": "end"
+            },
+            {
+              "op": "row_number",
+              "as": "order"
+            }
           ],
-          "sort": [{"field": "lost", "order": "descending"}],
-          "frame": [null, 0]
+          "sort": [
+            {
+              "field": "lost",
+              "order": "descending"
+            }
+          ],
+          "frame": [
+            null,
+            0
+          ]
         },
-        {"calculate": "datum.state_name", "as": "label"},
+        {
+          "calculate": "datum.state_name",
+          "as": "label"
+        },
         {
           "calculate": "format(datum.lost, ',') + (datum.pct < 1 ? ' (under 1%)' : ' (' + format(datum.pct, '.1f') + '%)')",
           "as": "value_text"
@@ -177,12 +279,20 @@
         "color": "#333"
       },
       "encoding": {
-        "x": {"field": "end", "type": "quantitative"},
-        "text": {"field": "value_text"},
+        "x": {
+          "field": "end",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "value_text"
+        },
         "y": {
           "field": "label",
           "type": "nominal",
-          "sort": {"field": "order", "op": "min"},
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
           "title": null,
           "axis": {
             "ticks": false,
@@ -196,15 +306,41 @@
     },
     {
       "transform": [
-        {"aggregate": [{"op": "sum", "field": "lost", "as": "lost"}]},
-        {"calculate": "'Total lost'", "as": "label"},
-        {"calculate": "99", "as": "order"},
-        {"calculate": "0", "as": "start"}
+        {
+          "aggregate": [
+            {
+              "op": "sum",
+              "field": "lost",
+              "as": "lost"
+            }
+          ]
+        },
+        {
+          "calculate": "'Total lost'",
+          "as": "label"
+        },
+        {
+          "calculate": "99",
+          "as": "order"
+        },
+        {
+          "calculate": "0",
+          "as": "start"
+        }
       ],
-      "mark": {"type": "bar", "height": 22, "color": "#8a8a8a"},
+      "mark": {
+        "type": "bar",
+        "height": 22,
+        "color": "#8a8a8a"
+      },
       "encoding": {
-        "x": {"field": "start", "type": "quantitative"},
-        "x2": {"field": "lost"},
+        "x": {
+          "field": "start",
+          "type": "quantitative"
+        },
+        "x2": {
+          "field": "lost"
+        },
         "tooltip": [
           {
             "field": "lost",
@@ -216,7 +352,10 @@
         "y": {
           "field": "label",
           "type": "nominal",
-          "sort": {"field": "order", "op": "min"},
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
           "title": null,
           "axis": {
             "ticks": false,
@@ -230,9 +369,23 @@
     },
     {
       "transform": [
-        {"aggregate": [{"op": "sum", "field": "lost", "as": "lost"}]},
-        {"calculate": "'Total lost'", "as": "label"},
-        {"calculate": "99", "as": "order"}
+        {
+          "aggregate": [
+            {
+              "op": "sum",
+              "field": "lost",
+              "as": "lost"
+            }
+          ]
+        },
+        {
+          "calculate": "'Total lost'",
+          "as": "label"
+        },
+        {
+          "calculate": "99",
+          "as": "order"
+        }
       ],
       "mark": {
         "type": "text",
@@ -243,12 +396,22 @@
         "color": "#333"
       },
       "encoding": {
-        "x": {"field": "lost", "type": "quantitative"},
-        "text": {"field": "lost", "type": "quantitative", "format": ","},
+        "x": {
+          "field": "lost",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "lost",
+          "type": "quantitative",
+          "format": ","
+        },
         "y": {
           "field": "label",
           "type": "nominal",
-          "sort": {"field": "order", "op": "min"},
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
           "title": null,
           "axis": {
             "ticks": false,
@@ -281,7 +444,11 @@
         "color": "#666",
         "lineHeight": 13
       },
-      "encoding": {"text": {"field": "t"}}
+      "encoding": {
+        "text": {
+          "field": "t"
+        }
+      }
     }
   ],
   "config": {
@@ -299,8 +466,11 @@
       "labelColor": "#555",
       "titleColor": "#333",
       "domainColor": "#bbbbbb",
-      "tickColor": "#bbbbbb"
+      "tickColor": "#bbbbbb",
+      "titleFontWeight": "normal"
     },
-    "view": {"stroke": null}
+    "view": {
+      "stroke": null
+    }
   }
 }
