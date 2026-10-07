@@ -285,7 +285,7 @@
         {
           "mark": {
             "type": "line",
-            "color": "#4d4d4d",
+            "color": "#9a9a9a",
             "strokeWidth": 2.5
           },
           "encoding": {
@@ -348,7 +348,7 @@
           "mark": {
             "type": "circle",
             "size": 45,
-            "color": "#4d4d4d",
+            "color": "#9a9a9a",
             "opacity": 1
           },
           "encoding": {
@@ -428,7 +428,7 @@
             "dx": 8,
             "fontSize": 11,
             "fontWeight": 700,
-            "color": "#4d4d4d"
+            "color": "#6b6b6b"
           },
           "encoding": {
             "x": {
@@ -456,7 +456,7 @@
             "dx": 3,
             "fontSize": 11,
             "fontWeight": 700,
-            "color": "#4d4d4d",
+            "color": "#6b6b6b",
             "dy": -14
           },
           "encoding": {
