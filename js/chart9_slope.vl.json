@@ -1,0 +1,462 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Slope chart of the six largest wine export markets in 2026, comparing each market's share of Australia's export litres with its share of export dollars. The United Kingdom takes 32% of litres but 15% of dollars; China takes 13% of litres but 33% of dollars.",
+  "title": {
+    "text": [
+      "The UK takes the most wine,",
+      "but China pays the most for it"
+    ],
+    "subtitle": [
+      "Share of Australia's wine exports, 2026: litres vs dollars.",
+      "Six largest markets by export value."
+    ]
+  },
+  "width": 560,
+  "height": 400,
+  "data": {
+    "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_by_country.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "export_value_million_AUD": "number",
+        "export_volume_million_litres": "number",
+        "average_value_per_litre": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "2026",
+      "as": "full_year"
+    },
+    {
+      "lookup": "full_year",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_sales_historical.csv",
+          "format": {
+            "type": "csv",
+            "parse": {
+              "full_year": "number",
+              "volume_million_litre": "number",
+              "value_aud_million": "number"
+            }
+          }
+        },
+        "key": "full_year",
+        "fields": [
+          "volume_million_litre",
+          "value_aud_million"
+        ]
+      }
+    },
+    {
+      "calculate": "datum.export_volume_million_litres / datum.volume_million_litre * 100",
+      "as": "litres_share"
+    },
+    {
+      "calculate": "datum.export_value_million_AUD / datum.value_aud_million * 100",
+      "as": "dollars_share"
+    },
+    {
+      "window": [
+        {
+          "op": "rank",
+          "as": "rank"
+        }
+      ],
+      "sort": [
+        {
+          "field": "export_value_million_AUD",
+          "order": "descending"
+        }
+      ]
+    },
+    {
+      "filter": "datum.rank <= 6"
+    },
+    {
+      "calculate": "datum.destination_market == 'Mainland China' ? 'China' : datum.destination_market",
+      "as": "market"
+    },
+    {
+      "fold": [
+        "litres_share",
+        "dollars_share"
+      ],
+      "as": [
+        "measure",
+        "share"
+      ]
+    },
+    {
+      "calculate": "datum.measure == 'litres_share' ? 'Share of litres' : 'Share of dollars'",
+      "as": "side"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 2.5
+      },
+      "encoding": {
+        "x": {
+          "field": "side",
+          "type": "ordinal",
+          "sort": [
+            "Share of litres",
+            "Share of dollars"
+          ],
+          "title": null,
+          "scale": {
+            "padding": 1.4
+          },
+          "axis": {
+            "orient": "top",
+            "labelAngle": 0,
+            "labelFontSize": 12,
+            "labelColor": "#333",
+            "domain": false,
+            "ticks": false,
+            "labelPadding": 8
+          }
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative",
+          "title": "Share of national exports (%)",
+          "scale": {
+            "domain": [
+              0,
+              35
+            ]
+          },
+          "axis": {
+            "values": [
+              0,
+              5,
+              10,
+              15,
+              20,
+              25,
+              30,
+              35
+            ],
+            "gridColor": "#ececec",
+            "domainColor": "#bbbbbb",
+            "tickColor": "#bbbbbb"
+          }
+        },
+        "detail": {
+          "field": "market"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.market == 'China' || datum.market == 'United Kingdom'",
+            "value": "#222222"
+          },
+          "value": "#c4c4c4"
+        },
+        "order": {
+          "field": "side"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 60,
+        "opacity": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "side",
+          "type": "ordinal",
+          "sort": [
+            "Share of litres",
+            "Share of dollars"
+          ]
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.market == 'China' || datum.market == 'United Kingdom'",
+            "value": "#222222"
+          },
+          "value": "#c4c4c4"
+        },
+        "tooltip": [
+          {
+            "field": "market",
+            "title": "Market"
+          },
+          {
+            "field": "litres_share",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Share of litres (%)"
+          },
+          {
+            "field": "dollars_share",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Share of dollars (%)"
+          },
+          {
+            "field": "export_volume_million_litres",
+            "type": "quantitative",
+            "format": ",.1f",
+            "title": "Volume (million litres)"
+          },
+          {
+            "field": "export_value_million_AUD",
+            "type": "quantitative",
+            "format": "$,.1f",
+            "title": "Value ($ million)"
+          },
+          {
+            "field": "average_value_per_litre",
+            "type": "quantitative",
+            "format": "$.2f",
+            "title": "Value per litre"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.side == 'Share of litres'"
+        },
+        {
+          "filter": "datum.market == 'China' || datum.market == 'United Kingdom'"
+        },
+        {
+          "calculate": "datum.market + '  ' + format(datum.share, '.0f') + '%'",
+          "as": "lab"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -9,
+        "baseline": "middle",
+        "fontSize": 11,
+        "fontWeight": 700
+      },
+      "encoding": {
+        "x": {
+          "field": "side",
+          "type": "ordinal",
+          "sort": [
+            "Share of litres",
+            "Share of dollars"
+          ]
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "lab"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.market == 'China' || datum.market == 'United Kingdom'",
+            "value": "#222222"
+          },
+          "value": "#7a7a7a"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.side == 'Share of litres'"
+        },
+        {
+          "filter": "!(datum.market == 'China' || datum.market == 'United Kingdom')"
+        },
+        {
+          "calculate": "datum.market + '  ' + format(datum.share, '.0f') + '%'",
+          "as": "lab"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -9,
+        "baseline": "middle",
+        "fontSize": 11
+      },
+      "encoding": {
+        "x": {
+          "field": "side",
+          "type": "ordinal",
+          "sort": [
+            "Share of litres",
+            "Share of dollars"
+          ]
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "lab"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.market == 'China' || datum.market == 'United Kingdom'",
+            "value": "#222222"
+          },
+          "value": "#7a7a7a"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.side == 'Share of dollars'"
+        },
+        {
+          "filter": "datum.market == 'China' || datum.market == 'United Kingdom'"
+        },
+        {
+          "calculate": "format(datum.share, '.0f') + '%  ' + datum.market",
+          "as": "lab"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 9,
+        "baseline": "middle",
+        "fontSize": 11,
+        "fontWeight": 700
+      },
+      "encoding": {
+        "x": {
+          "field": "side",
+          "type": "ordinal",
+          "sort": [
+            "Share of litres",
+            "Share of dollars"
+          ]
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "lab"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.market == 'China' || datum.market == 'United Kingdom'",
+            "value": "#222222"
+          },
+          "value": "#7a7a7a"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.side == 'Share of dollars'"
+        },
+        {
+          "filter": "!(datum.market == 'China' || datum.market == 'United Kingdom')"
+        },
+        {
+          "calculate": "format(datum.share, '.0f') + '%  ' + datum.market",
+          "as": "lab"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 9,
+        "baseline": "middle",
+        "fontSize": 11
+      },
+      "encoding": {
+        "x": {
+          "field": "side",
+          "type": "ordinal",
+          "sort": [
+            "Share of litres",
+            "Share of dollars"
+          ]
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "lab"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.market == 'China' || datum.market == 'United Kingdom'",
+            "value": "#222222"
+          },
+          "value": "#7a7a7a"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "t": [
+              "Source: Wine Australia, Export Report, wineaustralia.com.",
+              "Shares are of Australia's total wine exports in 2026."
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "x": -40,
+        "y": 425,
+        "fontSize": 10,
+        "color": "#666",
+        "lineHeight": 13
+      },
+      "encoding": {
+        "text": {
+          "field": "t"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
+    "title": {
+      "font": "Fraunces, Georgia, serif",
+      "fontSize": 18,
+      "fontWeight": 600,
+      "anchor": "start",
+      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
+      "subtitleFontSize": 13,
+      "subtitlePadding": 4
+    },
+    "axis": {
+      "labelColor": "#555",
+      "titleColor": "#333",
+      "titleFontWeight": "normal",
+      "labelFontSize": 11,
+      "titleFontSize": 12
+    },
+    "view": {
+      "stroke": null
+    }
+  }
+}
