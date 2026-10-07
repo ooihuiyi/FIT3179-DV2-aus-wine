@@ -1,0 +1,533 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Two aligned line charts, 2015 to 2026. Export value per litre rose 47%, from $2.61 to $3.84, while the trade-weighted index of the Australian dollar stayed between about 59 and 67.",
+  "title": {
+    "text": [
+      "Export prices rose 47% since 2015,",
+      "while the dollar stayed in a narrow range"
+    ],
+    "subtitle": [
+      "Export $ per litre (top) and trade-weighted index (bottom).",
+      "Trade-weighted index: higher = stronger Australian dollar."
+    ]
+  },
+  "data": {
+    "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_sales_historical.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "full_year": "number",
+        "volume_million_litre": "number",
+        "value_aud_million": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "lookup": "full_year",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/aud_twi_fy.csv",
+          "format": {
+            "type": "csv",
+            "parse": {
+              "full_year": "number",
+              "aud_twi": "number"
+            }
+          }
+        },
+        "key": "full_year",
+        "fields": [
+          "aud_twi"
+        ]
+      }
+    },
+    {
+      "calculate": "datum.value_aud_million / datum.volume_million_litre",
+      "as": "price_per_litre"
+    },
+    {
+      "window": [
+        {
+          "op": "first_value",
+          "field": "price_per_litre",
+          "as": "p0"
+        },
+        {
+          "op": "first_value",
+          "field": "aud_twi",
+          "as": "t0"
+        }
+      ],
+      "sort": [
+        {
+          "field": "full_year"
+        }
+      ],
+      "frame": [
+        null,
+        null
+      ]
+    },
+    {
+      "calculate": "datum.full_year == 2015 ? format(datum.price_per_litre, '$.2f') : format(datum.price_per_litre, '$.2f') + ' (+' + format((datum.price_per_litre / datum.p0 - 1) * 100, '.0f') + '%)'",
+      "as": "price_label"
+    },
+    {
+      "calculate": "datum.full_year == 2015 ? format(datum.aud_twi, '.1f') : format(datum.aud_twi, '.1f') + ' (' + format((datum.aud_twi / datum.t0 - 1) * 100, '.0f') + '%)'",
+      "as": "twi_label"
+    }
+  ],
+  "vconcat": [
+    {
+      "width": 560,
+      "height": 170,
+      "layer": [
+        {
+          "mark": {
+            "type": "line",
+            "color": "#a87c0c",
+            "strokeWidth": 2.5
+          },
+          "encoding": {
+            "x": {
+              "field": "full_year",
+              "type": "quantitative",
+              "title": null,
+              "scale": {
+                "domain": [
+                  2015,
+                  2026
+                ],
+                "zero": false
+              },
+              "axis": {
+                "format": "d",
+                "values": [
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025,
+                  2026
+                ],
+                "labelAngle": 0,
+                "grid": false,
+                "labels": false,
+                "ticks": false
+              }
+            },
+            "y": {
+              "field": "price_per_litre",
+              "type": "quantitative",
+              "title": "Export value ($ per litre)",
+              "scale": {
+                "domain": [
+                  0,
+                  4.5
+                ]
+              },
+              "axis": {
+                "values": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "format": "$.0f",
+                "gridColor": "#ececec"
+              }
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "circle",
+            "size": 45,
+            "color": "#a87c0c",
+            "opacity": 1
+          },
+          "encoding": {
+            "x": {
+              "field": "full_year",
+              "type": "quantitative"
+            },
+            "y": {
+              "field": "price_per_litre",
+              "type": "quantitative"
+            }
+          }
+        },
+        {
+          "params": [
+            {
+              "name": "hover_price",
+              "select": {
+                "type": "point",
+                "fields": [
+                  "full_year"
+                ],
+                "nearest": true,
+                "on": "pointerover",
+                "clear": "pointerout"
+              }
+            }
+          ],
+          "mark": {
+            "type": "rule",
+            "color": "#888888"
+          },
+          "encoding": {
+            "x": {
+              "field": "full_year",
+              "type": "quantitative"
+            },
+            "opacity": {
+              "condition": {
+                "param": "hover_price",
+                "empty": false,
+                "value": 0.6
+              },
+              "value": 0
+            },
+            "tooltip": [
+              {
+                "field": "full_year",
+                "type": "quantitative",
+                "format": "d",
+                "title": "Year"
+              },
+              {
+                "field": "price_per_litre",
+                "type": "quantitative",
+                "format": "$.2f",
+                "title": "Export value per litre"
+              },
+              {
+                "field": "aud_twi",
+                "type": "quantitative",
+                "format": ".1f",
+                "title": "Trade-weighted index"
+              }
+            ]
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.full_year == 2026"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "dx": 8,
+            "fontSize": 11,
+            "fontWeight": 700,
+            "color": "#a87c0c"
+          },
+          "encoding": {
+            "x": {
+              "field": "full_year",
+              "type": "quantitative"
+            },
+            "y": {
+              "field": "price_per_litre",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "price_label"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.full_year == 2015"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "dx": 3,
+            "fontSize": 11,
+            "fontWeight": 700,
+            "color": "#a87c0c",
+            "dy": -14
+          },
+          "encoding": {
+            "x": {
+              "field": "full_year",
+              "type": "quantitative"
+            },
+            "y": {
+              "field": "price_per_litre",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "price_label"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 560,
+      "height": 170,
+      "layer": [
+        {
+          "mark": {
+            "type": "line",
+            "color": "#4d4d4d",
+            "strokeWidth": 2.5
+          },
+          "encoding": {
+            "x": {
+              "field": "full_year",
+              "type": "quantitative",
+              "title": null,
+              "scale": {
+                "domain": [
+                  2015,
+                  2026
+                ],
+                "zero": false
+              },
+              "axis": {
+                "format": "d",
+                "values": [
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025,
+                  2026
+                ],
+                "labelAngle": 0,
+                "grid": false
+              }
+            },
+            "y": {
+              "field": "aud_twi",
+              "type": "quantitative",
+              "title": "Trade-weighted index",
+              "scale": {
+                "domain": [
+                  0,
+                  80
+                ]
+              },
+              "axis": {
+                "values": [
+                  0,
+                  20,
+                  40,
+                  60,
+                  80
+                ],
+                "format": "d",
+                "gridColor": "#ececec"
+              }
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "circle",
+            "size": 45,
+            "color": "#4d4d4d",
+            "opacity": 1
+          },
+          "encoding": {
+            "x": {
+              "field": "full_year",
+              "type": "quantitative"
+            },
+            "y": {
+              "field": "aud_twi",
+              "type": "quantitative"
+            }
+          }
+        },
+        {
+          "params": [
+            {
+              "name": "hover_twi",
+              "select": {
+                "type": "point",
+                "fields": [
+                  "full_year"
+                ],
+                "nearest": true,
+                "on": "pointerover",
+                "clear": "pointerout"
+              }
+            }
+          ],
+          "mark": {
+            "type": "rule",
+            "color": "#888888"
+          },
+          "encoding": {
+            "x": {
+              "field": "full_year",
+              "type": "quantitative"
+            },
+            "opacity": {
+              "condition": {
+                "param": "hover_twi",
+                "empty": false,
+                "value": 0.6
+              },
+              "value": 0
+            },
+            "tooltip": [
+              {
+                "field": "full_year",
+                "type": "quantitative",
+                "format": "d",
+                "title": "Year"
+              },
+              {
+                "field": "price_per_litre",
+                "type": "quantitative",
+                "format": "$.2f",
+                "title": "Export value per litre"
+              },
+              {
+                "field": "aud_twi",
+                "type": "quantitative",
+                "format": ".1f",
+                "title": "Trade-weighted index"
+              }
+            ]
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.full_year == 2026"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "dx": 8,
+            "fontSize": 11,
+            "fontWeight": 700,
+            "color": "#4d4d4d"
+          },
+          "encoding": {
+            "x": {
+              "field": "full_year",
+              "type": "quantitative"
+            },
+            "y": {
+              "field": "aud_twi",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "twi_label"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.full_year == 2015"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "dx": 3,
+            "fontSize": 11,
+            "fontWeight": 700,
+            "color": "#4d4d4d",
+            "dy": -14
+          },
+          "encoding": {
+            "x": {
+              "field": "full_year",
+              "type": "quantitative"
+            },
+            "y": {
+              "field": "aud_twi",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "twi_label"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 560,
+      "height": 10,
+      "data": {
+        "values": [
+          {
+            "t": [
+              "Sources: Wine Australia, Export Report, wineaustralia.com;",
+              "RBA, trade-weighted index, rba.gov.au/statistics/tables"
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "x": -50,
+        "y": 0,
+        "fontSize": 10,
+        "color": "#666",
+        "lineHeight": 13
+      },
+      "encoding": {
+        "text": {
+          "field": "t"
+        }
+      }
+    }
+  ],
+  "spacing": 18,
+  "config": {
+    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
+    "title": {
+      "font": "Fraunces, Georgia, serif",
+      "fontSize": 18,
+      "fontWeight": 600,
+      "anchor": "start",
+      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
+      "subtitleFontSize": 13,
+      "subtitlePadding": 4
+    },
+    "axis": {
+      "labelColor": "#555",
+      "titleColor": "#333",
+      "titleFontWeight": "normal",
+      "domainColor": "#bbbbbb",
+      "tickColor": "#bbbbbb",
+      "labelFontSize": 11,
+      "titleFontSize": 12
+    },
+    "view": {
+      "stroke": null
+    }
+  }
+}
