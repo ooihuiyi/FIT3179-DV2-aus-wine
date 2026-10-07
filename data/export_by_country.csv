@@ -1,0 +1,21 @@
+continent,anchor,destination_market,export_volume_million_litres,export_value_million_AUD,average_value_per_litre,latitude,longitude
+Asia,Beijing,Mainland China,77.46,756.04,9.76,34.5412252,108.9237067
+Asia,Singapore,Singapore,6.92,125.44,18.13,1.357107,103.8194992
+Asia,Hong Kong,Hong Kong,7.20,93.81,13.03,22.3492361,114.1857778
+Asia,Bangkok,Thailand,8.41,69.71,8.29,14.8971921,100.83273
+Asia,Kuala Lumpur,Malaysia,3.02,55.10,18.25,4.5693754,102.2656823
+Asia,Tokyo,Japan,12.03,50.82,4.22,36.5748441,139.2394179
+Asia,Seoul,South Korea,4.68,29.93,6.40,36.638392,127.6961188
+Asia,Taipei,Taiwan,2.56,28.37,11.08,23.9739374,120.9820179
+Asia,Manila,Philippines,2.47,11.53,4.67,12.7503486,122.7312101
+Europe,London,United Kingdom,192.31,340.11,1.77,54.7023545,-3.2765753
+Europe,Copenhagen,Denmark,16.46,23.52,1.43,55.670249,10.3333283
+Europe,Berlin,Germany,18.83,22.17,1.18,51.1638175,10.4478313
+Europe,Stockholm,Sweden,6.40,21.47,3.35,59.6749712,14.5208584
+Europe,Amsterdam,Netherlands,4.64,16.10,3.47,52.2434979,5.6343227
+Europe,Brussels,Belgium,9.12,14.15,1.55,50.6402809,4.6667145
+Europe,Helsinki,Finland,4.00,7.62,1.91,63.2467777,25.9209164
+Europe,Dublin,Ireland,1.73,6.97,4.03,52.865196,-7.9794599
+North America,"Washington, D.C.",United States,94.66,228.77,2.42,39.7837304,-100.445882
+North America,Ottawa,Canada,69.48,187.52,2.70,61.0666922,-107.991707
+Oceania,Wellington,New Zealand,25.68,98.52,3.84,-41.5000831,172.8344077
