@@ -1044,26 +1044,5 @@
       }
     }
   ],
-  "config": {
-    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
-    "title": {
-      "font": "Fraunces, Georgia, serif",
-      "fontSize": 18,
-      "fontWeight": 600,
-      "anchor": "start",
-      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
-      "subtitleFontSize": 13,
-      "subtitlePadding": 4
-    },
-    "axis": {
-      "labelColor": "#555",
-      "titleColor": "#333",
-      "titleFontWeight": "normal",
-      "labelFontSize": 11,
-      "titleFontSize": 12
-    },
-    "view": {
-      "stroke": null
-    }
-  }
+  "config": {}
 }
