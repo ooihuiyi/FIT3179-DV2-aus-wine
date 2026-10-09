@@ -16,7 +16,7 @@
     {
       "transform": [
         {
-          "calculate": "indexof(['South Australia', 'New South Wales', 'Victoria'], datum.state_name) >= 0 ? datum.state_name : 'Western Australia, Tasmania and Queensland'",
+          "calculate": "indexof(['South Australia', 'New South Wales', 'Victoria'], datum.state_name) >= 0 ? datum.state_name : 'Other states'",
           "as": "group"
         },
         {
@@ -29,7 +29,7 @@
         {"calculate": "datum.tonnes / datum.total * 100", "as": "share"},
         {"calculate": "round(datum.share)", "as": "squares"},
         {
-          "calculate": "indexof(['South Australia', 'New South Wales', 'Victoria', 'Western Australia, Tasmania and Queensland'], datum.group)",
+          "calculate": "indexof(['South Australia', 'New South Wales', 'Victoria', 'Other states'], datum.group)",
           "as": "order"
         },
         {
