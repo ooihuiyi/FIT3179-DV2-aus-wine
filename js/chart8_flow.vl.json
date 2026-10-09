@@ -1,1132 +1,15 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Flow map from Australia's centre to each market's centre, showing Australian wine exports to 20 markets in 2026. Line width shows export value. Mainland China is the largest market at $756 million, about a third of the value of these markets, followed by the United Kingdom and the United States.",
+  "description": "Two flow maps of Australia's 10 largest wine export markets in 2026. By litres (teal), Europe takes the largest share, led by the United Kingdom. By dollars (magenta), Asian markets bring in more than half the value, led by China.",
   "title": {
     "text": [
-      "China buys a third of Australia's",
-      "wine exports by value"
+      "Europe takes the most litres,",
+      "Asia brings in the most dollars"
     ],
     "subtitle": [
-      "Export value to 20 markets, 2026; wider = more dollars.",
-      "Lines run between country centres. Darker = overlap."
+      "Top 10 markets by litres (top) and dollars (bottom), 2026.",
+      "Wider line = more. Lines run between country centres."
     ]
-  },
-  "width": 640,
-  "height": 330,
-  "projection": {
-    "type": "equalEarth",
-    "rotate": [
-      -150,
-      0
-    ]
-  },
-  "layer": [
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/js/world_countries.json",
-        "format": {
-          "type": "topojson",
-          "feature": "countries"
-        }
-      },
-      "mark": {
-        "type": "geoshape",
-        "fill": "#ebebeb",
-        "stroke": "white",
-        "strokeWidth": 0.5,
-        "clip": true
-      }
-    },
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_by_country.csv",
-        "format": {
-          "type": "csv",
-          "parse": {
-            "export_value_million_AUD": "number",
-            "export_volume_million_litres": "number",
-            "average_value_per_litre": "number",
-            "latitude": "number",
-            "longitude": "number"
-          }
-        }
-      },
-      "transform": [
-        {
-          "joinaggregate": [
-            {
-              "op": "sum",
-              "field": "export_value_million_AUD",
-              "as": "total"
-            }
-          ]
-        },
-        {
-          "calculate": "datum.export_value_million_AUD / datum.total * 100",
-          "as": "share"
-        },
-        {
-          "window": [
-            {
-              "op": "rank",
-              "as": "rank"
-            }
-          ],
-          "sort": [
-            {
-              "field": "export_value_million_AUD",
-              "order": "descending"
-            }
-          ]
-        },
-        {
-          "calculate": "{'type': 'LineString', 'coordinates': [[133.78, -25.27], [datum.longitude, datum.latitude]]}",
-          "as": "route"
-        },
-        {
-          "calculate": "datum.destination_market == 'Mainland China' ? 'China' : datum.destination_market",
-          "as": "label"
-        },
-        {
-          "calculate": "[datum.label, '$' + format(datum.export_value_million_AUD, '.0f') + 'm']",
-          "as": "label_lines"
-        },
-        {
-          "calculate": "{'Mainland China': 108.9, 'United Kingdom': -20, 'Singapore': 58, 'Hong Kong': 141, 'United States': -95, 'Canada': -103, 'New Zealand': 176}[datum.destination_market]",
-          "as": "tx"
-        },
-        {
-          "calculate": "{'Mainland China': 43.5, 'United Kingdom': 73, 'Singapore': -12, 'Hong Kong': 15, 'United States': 39.8, 'Canada': 61, 'New Zealand': -41.5}[datum.destination_market]",
-          "as": "ty"
-        },
-        {
-          "calculate": "{'Mainland China': null, 'United Kingdom': -4, 'Singapore': 82, 'Hong Kong': 136, 'United States': null, 'Canada': null, 'New Zealand': null}[datum.destination_market]",
-          "as": "lx"
-        },
-        {
-          "calculate": "{'Mainland China': null, 'United Kingdom': 64, 'Singapore': -8, 'Hong Kong': 16, 'United States': null, 'Canada': null, 'New Zealand': null}[datum.destination_market]",
-          "as": "ly"
-        },
-        {
-          "calculate": "{'Mainland China': 'center', 'United Kingdom': 'left', 'Singapore': 'left', 'Hong Kong': 'left', 'United States': 'left', 'Canada': 'left', 'New Zealand': 'left'}[datum.destination_market]",
-          "as": "al"
-        }
-      ],
-      "layer": [
-        {
-          "mark": {
-            "type": "geoshape",
-            "filled": false,
-            "strokeCap": "round",
-            "clip": true
-          },
-          "encoding": {
-            "shape": {
-              "field": "route",
-              "type": "geojson"
-            },
-            "order": {
-              "field": "export_value_million_AUD",
-              "type": "quantitative",
-              "sort": "descending"
-            },
-            "tooltip": [
-              {
-                "field": "label",
-                "title": "Market"
-              },
-              {
-                "field": "export_value_million_AUD",
-                "type": "quantitative",
-                "format": "$,.1f",
-                "title": "Export value ($ million)"
-              },
-              {
-                "field": "share",
-                "type": "quantitative",
-                "format": ".1f",
-                "title": "Share of these 20 markets (%)"
-              },
-              {
-                "field": "export_volume_million_litres",
-                "type": "quantitative",
-                "format": ",.1f",
-                "title": "Volume (million litres)"
-              }
-            ],
-            "strokeWidth": {
-              "field": "line_px",
-              "type": "quantitative",
-              "scale": null
-            },
-            "stroke": {
-              "value": "#c51b7d"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 0.7
-              },
-              "value": 0.06
-            }
-          },
-          "transform": [
-            {
-              "calculate": "0.5 + datum.export_value_million_AUD / 760 * 7.5",
-              "as": "line_px"
-            }
-          ]
-        },
-        {
-          "mark": {
-            "type": "circle",
-            "size": 18,
-            "color": "#c51b7d",
-            "clip": true
-          },
-          "encoding": {
-            "longitude": {
-              "field": "longitude",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "latitude",
-              "type": "quantitative"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0.1
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "indexof(['Mainland China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand'], datum.destination_market) >= 0"
-            },
-            {
-              "filter": "isValid(datum.lx)"
-            }
-          ],
-          "mark": {
-            "type": "circle",
-            "size": 110,
-            "filled": false,
-            "stroke": "#333",
-            "strokeWidth": 1
-          },
-          "encoding": {
-            "longitude": {
-              "field": "longitude",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "latitude",
-              "type": "quantitative"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "indexof(['Mainland China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand'], datum.destination_market) >= 0"
-            },
-            {
-              "filter": "isValid(datum.lx)"
-            }
-          ],
-          "mark": {
-            "type": "rule",
-            "color": "#8a8a8a",
-            "strokeWidth": 0.8
-          },
-          "encoding": {
-            "longitude": {
-              "field": "longitude",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "latitude",
-              "type": "quantitative"
-            },
-            "longitude2": {
-              "field": "lx"
-            },
-            "latitude2": {
-              "field": "ly"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "indexof(['Mainland China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand'], datum.destination_market) >= 0"
-            },
-            {
-              "filter": "datum.al == 'left'"
-            }
-          ],
-          "mark": {
-            "type": "text",
-            "fontSize": 11,
-            "fontWeight": 600,
-            "lineHeight": 13,
-            "baseline": "middle",
-            "align": "left",
-            "stroke": "white",
-            "strokeWidth": 3,
-            "strokeJoin": "round",
-            "color": "white",
-            "dx": 8
-          },
-          "encoding": {
-            "longitude": {
-              "field": "tx",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "ty",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "label_lines"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "indexof(['Mainland China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand'], datum.destination_market) >= 0"
-            },
-            {
-              "filter": "datum.al == 'left'"
-            }
-          ],
-          "mark": {
-            "type": "text",
-            "fontSize": 11,
-            "fontWeight": 600,
-            "lineHeight": 13,
-            "baseline": "middle",
-            "align": "left",
-            "color": "#222",
-            "dx": 8
-          },
-          "encoding": {
-            "longitude": {
-              "field": "tx",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "ty",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "label_lines"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "indexof(['Mainland China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand'], datum.destination_market) >= 0"
-            },
-            {
-              "filter": "datum.al == 'center'"
-            }
-          ],
-          "mark": {
-            "type": "text",
-            "fontSize": 11,
-            "fontWeight": 600,
-            "lineHeight": 13,
-            "baseline": "middle",
-            "align": "center",
-            "stroke": "white",
-            "strokeWidth": 3,
-            "strokeJoin": "round",
-            "color": "white"
-          },
-          "encoding": {
-            "longitude": {
-              "field": "tx",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "ty",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "label_lines"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "indexof(['Mainland China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand'], datum.destination_market) >= 0"
-            },
-            {
-              "filter": "datum.al == 'center'"
-            }
-          ],
-          "mark": {
-            "type": "text",
-            "fontSize": 11,
-            "fontWeight": 600,
-            "lineHeight": 13,
-            "baseline": "middle",
-            "align": "center",
-            "color": "#222"
-          },
-          "encoding": {
-            "longitude": {
-              "field": "tx",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "ty",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "label_lines"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "datum.continent == 'Europe' && indexof(['United Kingdom'], datum.destination_market) < 0"
-            },
-            {
-              "aggregate": [
-                {
-                  "op": "sum",
-                  "field": "export_value_million_AUD",
-                  "as": "v"
-                },
-                {
-                  "op": "count",
-                  "as": "n"
-                }
-              ],
-              "groupby": [
-                "continent"
-              ]
-            },
-            {
-              "calculate": "[datum.n + ' other European', 'markets: $' + format(datum.v, '.0f') + 'm']",
-              "as": "t"
-            },
-            {
-              "calculate": "4",
-              "as": "nx"
-            },
-            {
-              "calculate": "35",
-              "as": "ny"
-            },
-            {
-              "calculate": "10",
-              "as": "ax"
-            },
-            {
-              "calculate": "49",
-              "as": "ay"
-            },
-            {
-              "calculate": "9",
-              "as": "bx"
-            },
-            {
-              "calculate": "36",
-              "as": "by"
-            }
-          ],
-          "mark": {
-            "type": "rule",
-            "color": "#8a8a8a",
-            "strokeWidth": 0.8
-          },
-          "encoding": {
-            "longitude": {
-              "field": "ax",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "ay",
-              "type": "quantitative"
-            },
-            "longitude2": {
-              "field": "bx"
-            },
-            "latitude2": {
-              "field": "by"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "datum.continent == 'Europe' && indexof(['United Kingdom'], datum.destination_market) < 0"
-            },
-            {
-              "aggregate": [
-                {
-                  "op": "sum",
-                  "field": "export_value_million_AUD",
-                  "as": "v"
-                },
-                {
-                  "op": "count",
-                  "as": "n"
-                }
-              ],
-              "groupby": [
-                "continent"
-              ]
-            },
-            {
-              "calculate": "[datum.n + ' other European', 'markets: $' + format(datum.v, '.0f') + 'm']",
-              "as": "t"
-            },
-            {
-              "calculate": "4",
-              "as": "nx"
-            },
-            {
-              "calculate": "35",
-              "as": "ny"
-            },
-            {
-              "calculate": "10",
-              "as": "ax"
-            },
-            {
-              "calculate": "49",
-              "as": "ay"
-            },
-            {
-              "calculate": "9",
-              "as": "bx"
-            },
-            {
-              "calculate": "36",
-              "as": "by"
-            }
-          ],
-          "mark": {
-            "type": "text",
-            "align": "left",
-            "baseline": "top",
-            "fontSize": 11,
-            "lineHeight": 13,
-            "stroke": "white",
-            "strokeWidth": 3,
-            "strokeJoin": "round",
-            "color": "white"
-          },
-          "encoding": {
-            "longitude": {
-              "field": "nx",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "ny",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "t"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "datum.continent == 'Europe' && indexof(['United Kingdom'], datum.destination_market) < 0"
-            },
-            {
-              "aggregate": [
-                {
-                  "op": "sum",
-                  "field": "export_value_million_AUD",
-                  "as": "v"
-                },
-                {
-                  "op": "count",
-                  "as": "n"
-                }
-              ],
-              "groupby": [
-                "continent"
-              ]
-            },
-            {
-              "calculate": "[datum.n + ' other European', 'markets: $' + format(datum.v, '.0f') + 'm']",
-              "as": "t"
-            },
-            {
-              "calculate": "4",
-              "as": "nx"
-            },
-            {
-              "calculate": "35",
-              "as": "ny"
-            },
-            {
-              "calculate": "10",
-              "as": "ax"
-            },
-            {
-              "calculate": "49",
-              "as": "ay"
-            },
-            {
-              "calculate": "9",
-              "as": "bx"
-            },
-            {
-              "calculate": "36",
-              "as": "by"
-            }
-          ],
-          "mark": {
-            "type": "text",
-            "align": "left",
-            "baseline": "top",
-            "fontSize": 11,
-            "lineHeight": 13,
-            "color": "#333"
-          },
-          "encoding": {
-            "longitude": {
-              "field": "nx",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "ny",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "t"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "datum.continent == 'Asia' && indexof(['Mainland China', 'Singapore', 'Hong Kong'], datum.destination_market) < 0"
-            },
-            {
-              "aggregate": [
-                {
-                  "op": "sum",
-                  "field": "export_value_million_AUD",
-                  "as": "v"
-                },
-                {
-                  "op": "count",
-                  "as": "n"
-                }
-              ],
-              "groupby": [
-                "continent"
-              ]
-            },
-            {
-              "calculate": "[datum.n + ' other Asian', 'markets: $' + format(datum.v, '.0f') + 'm']",
-              "as": "t"
-            },
-            {
-              "calculate": "128",
-              "as": "nx"
-            },
-            {
-              "calculate": "62",
-              "as": "ny"
-            },
-            {
-              "calculate": "139.2",
-              "as": "ax"
-            },
-            {
-              "calculate": "38",
-              "as": "ay"
-            },
-            {
-              "calculate": "137",
-              "as": "bx"
-            },
-            {
-              "calculate": "55",
-              "as": "by"
-            }
-          ],
-          "mark": {
-            "type": "rule",
-            "color": "#8a8a8a",
-            "strokeWidth": 0.8
-          },
-          "encoding": {
-            "longitude": {
-              "field": "ax",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "ay",
-              "type": "quantitative"
-            },
-            "longitude2": {
-              "field": "bx"
-            },
-            "latitude2": {
-              "field": "by"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "datum.continent == 'Asia' && indexof(['Mainland China', 'Singapore', 'Hong Kong'], datum.destination_market) < 0"
-            },
-            {
-              "aggregate": [
-                {
-                  "op": "sum",
-                  "field": "export_value_million_AUD",
-                  "as": "v"
-                },
-                {
-                  "op": "count",
-                  "as": "n"
-                }
-              ],
-              "groupby": [
-                "continent"
-              ]
-            },
-            {
-              "calculate": "[datum.n + ' other Asian', 'markets: $' + format(datum.v, '.0f') + 'm']",
-              "as": "t"
-            },
-            {
-              "calculate": "128",
-              "as": "nx"
-            },
-            {
-              "calculate": "62",
-              "as": "ny"
-            },
-            {
-              "calculate": "139.2",
-              "as": "ax"
-            },
-            {
-              "calculate": "38",
-              "as": "ay"
-            },
-            {
-              "calculate": "137",
-              "as": "bx"
-            },
-            {
-              "calculate": "55",
-              "as": "by"
-            }
-          ],
-          "mark": {
-            "type": "text",
-            "align": "left",
-            "baseline": "top",
-            "fontSize": 11,
-            "lineHeight": 13,
-            "stroke": "white",
-            "strokeWidth": 3,
-            "strokeJoin": "round",
-            "color": "white"
-          },
-          "encoding": {
-            "longitude": {
-              "field": "nx",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "ny",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "t"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        },
-        {
-          "transform": [
-            {
-              "filter": "datum.continent == 'Asia' && indexof(['Mainland China', 'Singapore', 'Hong Kong'], datum.destination_market) < 0"
-            },
-            {
-              "aggregate": [
-                {
-                  "op": "sum",
-                  "field": "export_value_million_AUD",
-                  "as": "v"
-                },
-                {
-                  "op": "count",
-                  "as": "n"
-                }
-              ],
-              "groupby": [
-                "continent"
-              ]
-            },
-            {
-              "calculate": "[datum.n + ' other Asian', 'markets: $' + format(datum.v, '.0f') + 'm']",
-              "as": "t"
-            },
-            {
-              "calculate": "128",
-              "as": "nx"
-            },
-            {
-              "calculate": "62",
-              "as": "ny"
-            },
-            {
-              "calculate": "139.2",
-              "as": "ax"
-            },
-            {
-              "calculate": "38",
-              "as": "ay"
-            },
-            {
-              "calculate": "137",
-              "as": "bx"
-            },
-            {
-              "calculate": "55",
-              "as": "by"
-            }
-          ],
-          "mark": {
-            "type": "text",
-            "align": "left",
-            "baseline": "top",
-            "fontSize": 11,
-            "lineHeight": 13,
-            "color": "#333"
-          },
-          "encoding": {
-            "longitude": {
-              "field": "nx",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "ny",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "t"
-            },
-            "opacity": {
-              "condition": {
-                "test": "pick == 'All' || datum.continent == pick",
-                "value": 1
-              },
-              "value": 0
-            }
-          }
-        }
-      ]
-    },
-    {
-      "data": {
-        "values": [
-          {
-            "lon": 133.78,
-            "lat": -25.27
-          }
-        ]
-      },
-      "mark": {
-        "type": "circle",
-        "size": 45,
-        "color": "#4d4d4d",
-        "opacity": 1
-      },
-      "encoding": {
-        "longitude": {
-          "field": "lon",
-          "type": "quantitative"
-        },
-        "latitude": {
-          "field": "lat",
-          "type": "quantitative"
-        }
-      }
-    },
-    {
-      "data": {
-        "values": [
-          {
-            "lon": 133.78,
-            "lat": -25.27,
-            "t": "Australia"
-          }
-        ]
-      },
-      "mark": {
-        "type": "text",
-        "align": "right",
-        "dx": -7,
-        "dy": 2,
-        "fontSize": 11,
-        "fontWeight": 600,
-        "color": "#4d4d4d"
-      },
-      "encoding": {
-        "longitude": {
-          "field": "lon",
-          "type": "quantitative"
-        },
-        "latitude": {
-          "field": "lat",
-          "type": "quantitative"
-        },
-        "text": {
-          "field": "t"
-        }
-      }
-    },
-    {
-      "data": {
-        "values": [
-          {
-            "v": 50,
-            "x0": 0,
-            "x1": 40,
-            "px": 0.993421052631579,
-            "lab": "$50m"
-          },
-          {
-            "v": 250,
-            "x0": 110,
-            "x1": 150,
-            "px": 2.9671052631578947,
-            "lab": "$250m"
-          },
-          {
-            "v": 750,
-            "x0": 220,
-            "x1": 260,
-            "px": 7.901315789473684,
-            "lab": "$750m"
-          }
-        ]
-      },
-      "layer": [
-        {
-          "mark": {
-            "type": "rule",
-            "color": "#c51b7d",
-            "strokeCap": "round",
-            "opacity": 1
-          },
-          "encoding": {
-            "x": {
-              "field": "x0",
-              "type": "quantitative",
-              "scale": null
-            },
-            "x2": {
-              "field": "x1"
-            },
-            "y": {
-              "value": 322
-            },
-            "strokeWidth": {
-              "field": "px",
-              "type": "quantitative",
-              "scale": null
-            }
-          }
-        },
-        {
-          "mark": {
-            "type": "text",
-            "align": "left",
-            "baseline": "middle",
-            "dx": 11,
-            "fontSize": 12,
-            "color": "#333"
-          },
-          "encoding": {
-            "x": {
-              "field": "x1",
-              "type": "quantitative",
-              "scale": null
-            },
-            "y": {
-              "value": 322
-            },
-            "text": {
-              "field": "lab"
-            }
-          }
-        },
-        {
-          "data": {
-            "values": [
-              {
-                "t": "Export value (A$, 2026)"
-              }
-            ]
-          },
-          "mark": {
-            "type": "text",
-            "align": "left",
-            "baseline": "bottom",
-            "x": 0,
-            "y": 308,
-            "fontSize": 12,
-            "color": "#333"
-          },
-          "encoding": {
-            "text": {
-              "field": "t"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "data": {
-        "values": [
-          {
-            "t": [
-              "Sources: Wine Australia, Export Report, wineaustralia.com;",
-              "Natural Earth country boundaries, naturalearthdata.com."
-            ]
-          }
-        ]
-      },
-      "mark": {
-        "type": "text",
-        "align": "left",
-        "baseline": "top",
-        "x": 0,
-        "y": 345,
-        "fontSize": 10,
-        "color": "#666",
-        "lineHeight": 13
-      },
-      "encoding": {
-        "text": {
-          "field": "t"
-        }
-      }
-    }
-  ],
-  "config": {
-    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
-    "title": {
-      "font": "Fraunces, Georgia, serif",
-      "fontSize": 18,
-      "fontWeight": 600,
-      "anchor": "start",
-      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
-      "subtitleFontSize": 13,
-      "subtitlePadding": 4
-    },
-    "legend": {
-      "titleFontSize": 12,
-      "labelFontSize": 12,
-      "titleFontWeight": "normal"
-    },
-    "view": {
-      "stroke": null
-    }
   },
   "params": [
     {
@@ -1144,5 +27,1668 @@
         "name": "Show markets in: "
       }
     }
-  ]
+  ],
+  "vconcat": [
+    {
+      "title": {
+        "text": "By litres: the 10 largest markets",
+        "anchor": "start",
+        "fontSize": 14,
+        "fontWeight": 600,
+        "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
+        "color": "#01807a",
+        "offset": 6
+      },
+      "width": 640,
+      "height": 300,
+      "projection": {
+        "type": "equalEarth",
+        "rotate": [
+          -150,
+          0
+        ]
+      },
+      "layer": [
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/js/world_countries.json",
+            "format": {
+              "type": "topojson",
+              "feature": "countries"
+            }
+          },
+          "mark": {
+            "type": "geoshape",
+            "fill": "#ebebeb",
+            "stroke": "white",
+            "strokeWidth": 0.5,
+            "clip": true
+          }
+        },
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_by_country.csv",
+            "format": {
+              "type": "csv",
+              "parse": {
+                "export_value_million_AUD": "number",
+                "export_volume_million_litres": "number",
+                "average_value_per_litre": "number",
+                "latitude": "number",
+                "longitude": "number"
+              }
+            }
+          },
+          "transform": [
+            {
+              "window": [
+                {
+                  "op": "rank",
+                  "as": "rank"
+                }
+              ],
+              "sort": [
+                {
+                  "field": "export_volume_million_litres",
+                  "order": "descending"
+                }
+              ]
+            },
+            {
+              "filter": "datum.rank <= 10"
+            },
+            {
+              "calculate": "datum.destination_market == 'Mainland China' ? 'China' : datum.destination_market",
+              "as": "label"
+            },
+            {
+              "calculate": "{'type': 'LineString', 'coordinates': [[133.78, -25.27], [datum.longitude, datum.latitude]]}",
+              "as": "route"
+            },
+            {
+              "calculate": "0.5 + datum['export_volume_million_litres'] / 192.31 * 8",
+              "as": "line_px"
+            },
+            {
+              "calculate": "[datum.label, format(datum.export_volume_million_litres, '.0f') + 'm litres']",
+              "as": "label_lines"
+            },
+            {
+              "calculate": "{'United Kingdom': -20, 'United States': -95, 'China': 108.9, 'Canada': -103, 'New Zealand': 176, 'Japan': 143, 'Thailand': 62, 'Denmark': 20, 'Germany': 20, 'Belgium': 20}[datum.label]",
+              "as": "tx"
+            },
+            {
+              "calculate": "{'United Kingdom': 73, 'United States': 39.8, 'China': 45, 'Canada': 61, 'New Zealand': -41.5, 'Japan': 37, 'Thailand': 10, 'Denmark': 36, 'Germany': 26, 'Belgium': 16}[datum.label]",
+              "as": "ty"
+            },
+            {
+              "calculate": "{'United Kingdom': -4, 'United States': null, 'China': null, 'Canada': null, 'New Zealand': null, 'Japan': null, 'Thailand': 85, 'Denmark': 21, 'Germany': 21, 'Belgium': 21}[datum.label]",
+              "as": "lx"
+            },
+            {
+              "calculate": "{'United Kingdom': 64, 'United States': null, 'China': null, 'Canada': null, 'New Zealand': null, 'Japan': null, 'Thailand': 12, 'Denmark': 36, 'Germany': 26, 'Belgium': 16}[datum.label]",
+              "as": "ly"
+            },
+            {
+              "calculate": "{'United Kingdom': 'left', 'United States': 'left', 'China': 'center', 'Canada': 'left', 'New Zealand': 'left', 'Japan': 'left', 'Thailand': 'left', 'Denmark': 'left', 'Germany': 'left', 'Belgium': 'left'}[datum.label]",
+              "as": "al"
+            },
+            {
+              "calculate": "[datum.label, format(datum.export_volume_million_litres, '.0f') + 'm litres']",
+              "as": "label_one"
+            }
+          ],
+          "layer": [
+            {
+              "mark": {
+                "type": "geoshape",
+                "filled": false,
+                "strokeCap": "round",
+                "clip": true,
+                "fill": null
+              },
+              "encoding": {
+                "shape": {
+                  "field": "route",
+                  "type": "geojson"
+                },
+                "strokeWidth": {
+                  "field": "line_px",
+                  "type": "quantitative",
+                  "scale": null
+                },
+                "stroke": {
+                  "value": "#01807a"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 0.7
+                  },
+                  "value": 0.06
+                },
+                "order": {
+                  "field": "export_volume_million_litres",
+                  "type": "quantitative",
+                  "sort": "descending"
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by litres"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            },
+            {
+              "mark": {
+                "type": "circle",
+                "size": 18,
+                "color": "#01807a",
+                "clip": true
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0.1
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by litres"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['United Kingdom', 'United States', 'China', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Denmark', 'Germany', 'Belgium'], datum.label) >= 0"
+                },
+                {
+                  "filter": "isValid(datum.lx)"
+                }
+              ],
+              "mark": {
+                "type": "circle",
+                "size": 110,
+                "filled": false,
+                "stroke": "#333",
+                "strokeWidth": 1
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['United Kingdom', 'United States', 'China', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Denmark', 'Germany', 'Belgium'], datum.label) >= 0"
+                },
+                {
+                  "filter": "isValid(datum.lx)"
+                }
+              ],
+              "mark": {
+                "type": "rule",
+                "color": "#8a8a8a",
+                "strokeWidth": 0.8
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "longitude2": {
+                  "field": "lx"
+                },
+                "latitude2": {
+                  "field": "ly"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['United Kingdom', 'United States', 'China', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Denmark', 'Germany', 'Belgium'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'left'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "lineHeight": 13,
+                "baseline": "middle",
+                "align": "left",
+                "dx": 8,
+                "stroke": "white",
+                "strokeWidth": 3,
+                "strokeJoin": "round",
+                "color": "white"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_lines"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['United Kingdom', 'United States', 'China', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Denmark', 'Germany', 'Belgium'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'left'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "lineHeight": 13,
+                "baseline": "middle",
+                "align": "left",
+                "dx": 8,
+                "color": "#222"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_lines"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by litres"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['United Kingdom', 'United States', 'China', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Denmark', 'Germany', 'Belgium'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'center'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "lineHeight": 13,
+                "baseline": "middle",
+                "align": "center",
+                "stroke": "white",
+                "strokeWidth": 3,
+                "strokeJoin": "round",
+                "color": "white"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_lines"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['United Kingdom', 'United States', 'China', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Denmark', 'Germany', 'Belgium'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'center'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "lineHeight": 13,
+                "baseline": "middle",
+                "align": "center",
+                "color": "#222"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_lines"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by litres"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['United Kingdom', 'United States', 'China', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Denmark', 'Germany', 'Belgium'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'stackR'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "baseline": "middle",
+                "align": "right",
+                "dx": -3,
+                "stroke": "white",
+                "strokeWidth": 3,
+                "strokeJoin": "round",
+                "color": "white",
+                "lineHeight": 13
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_one"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['United Kingdom', 'United States', 'China', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Denmark', 'Germany', 'Belgium'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'stackR'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "baseline": "middle",
+                "align": "right",
+                "dx": -3,
+                "color": "#222",
+                "lineHeight": 13
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_one"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by litres"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            },
+            {
+              "mark": {
+                "type": "circle",
+                "size": 220,
+                "color": "#ffffff",
+                "opacity": 0.01,
+                "clip": true
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by litres"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "data": {
+            "values": [
+              {
+                "lon": 133.78,
+                "lat": -25.27,
+                "t": "Australia"
+              }
+            ]
+          },
+          "layer": [
+            {
+              "mark": {
+                "type": "circle",
+                "size": 45,
+                "color": "#4d4d4d",
+                "opacity": 1
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "lon",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "lat",
+                  "type": "quantitative"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "align": "right",
+                "dx": -7,
+                "dy": 2,
+                "fontSize": 11,
+                "fontWeight": 600,
+                "color": "#4d4d4d"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "lon",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "lat",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "t"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "data": {
+            "values": [
+              {
+                "lab": "10m litres",
+                "px": 0.9159950080599033,
+                "x0": 0,
+                "x1": 40
+              },
+              {
+                "lab": "50m litres",
+                "px": 2.5799750402995163,
+                "x0": 140,
+                "x1": 180
+              },
+              {
+                "lab": "190m litres",
+                "px": 8.403905153138162,
+                "x0": 280,
+                "x1": 320
+              }
+            ]
+          },
+          "layer": [
+            {
+              "mark": {
+                "type": "rule",
+                "color": "#01807a",
+                "strokeCap": "round"
+              },
+              "encoding": {
+                "x": {
+                  "field": "x0",
+                  "type": "quantitative",
+                  "scale": null
+                },
+                "x2": {
+                  "field": "x1"
+                },
+                "y": {
+                  "value": 292
+                },
+                "strokeWidth": {
+                  "field": "px",
+                  "type": "quantitative",
+                  "scale": null
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "align": "left",
+                "baseline": "middle",
+                "dx": 11,
+                "fontSize": 12,
+                "color": "#333"
+              },
+              "encoding": {
+                "x": {
+                  "field": "x1",
+                  "type": "quantitative",
+                  "scale": null
+                },
+                "y": {
+                  "value": 292
+                },
+                "text": {
+                  "field": "lab"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "text": "By dollars: the 10 largest markets",
+        "anchor": "start",
+        "fontSize": 14,
+        "fontWeight": 600,
+        "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
+        "color": "#c51b7d",
+        "offset": 6
+      },
+      "width": 640,
+      "height": 300,
+      "projection": {
+        "type": "equalEarth",
+        "rotate": [
+          -150,
+          0
+        ]
+      },
+      "layer": [
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/js/world_countries.json",
+            "format": {
+              "type": "topojson",
+              "feature": "countries"
+            }
+          },
+          "mark": {
+            "type": "geoshape",
+            "fill": "#ebebeb",
+            "stroke": "white",
+            "strokeWidth": 0.5,
+            "clip": true
+          }
+        },
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_by_country.csv",
+            "format": {
+              "type": "csv",
+              "parse": {
+                "export_value_million_AUD": "number",
+                "export_volume_million_litres": "number",
+                "average_value_per_litre": "number",
+                "latitude": "number",
+                "longitude": "number"
+              }
+            }
+          },
+          "transform": [
+            {
+              "window": [
+                {
+                  "op": "rank",
+                  "as": "rank"
+                }
+              ],
+              "sort": [
+                {
+                  "field": "export_value_million_AUD",
+                  "order": "descending"
+                }
+              ]
+            },
+            {
+              "filter": "datum.rank <= 10"
+            },
+            {
+              "calculate": "datum.destination_market == 'Mainland China' ? 'China' : datum.destination_market",
+              "as": "label"
+            },
+            {
+              "calculate": "{'type': 'LineString', 'coordinates': [[133.78, -25.27], [datum.longitude, datum.latitude]]}",
+              "as": "route"
+            },
+            {
+              "calculate": "0.5 + datum['export_value_million_AUD'] / 756.04 * 8",
+              "as": "line_px"
+            },
+            {
+              "calculate": "[datum.label, '$' + format(datum.export_value_million_AUD, '.0f') + 'm']",
+              "as": "label_lines"
+            },
+            {
+              "calculate": "{'China': 100, 'United Kingdom': -20, 'Singapore': 58, 'Hong Kong': 110, 'United States': -95, 'Canada': -103, 'New Zealand': 176, 'Japan': 143, 'Thailand': 74, 'Malaysia': 74}[datum.label]",
+              "as": "tx"
+            },
+            {
+              "calculate": "{'China': 46, 'United Kingdom': 73, 'Singapore': -12, 'Hong Kong': 120, 'United States': 39.8, 'Canada': 61, 'New Zealand': -41.5, 'Japan': 37, 'Thailand': 20, 'Malaysia': 10}[datum.label]",
+              "as": "ty"
+            },
+            {
+              "calculate": "{'China': null, 'United Kingdom': -4, 'Singapore': 82, 'Hong Kong': 133, 'United States': null, 'Canada': null, 'New Zealand': null, 'Japan': null, 'Thailand': 75, 'Malaysia': 75}[datum.label]",
+              "as": "lx"
+            },
+            {
+              "calculate": "{'China': null, 'United Kingdom': 64, 'Singapore': -8, 'Hong Kong': 125, 'United States': null, 'Canada': null, 'New Zealand': null, 'Japan': null, 'Thailand': 20, 'Malaysia': 10}[datum.label]",
+              "as": "ly"
+            },
+            {
+              "calculate": "{'China': 'center', 'United Kingdom': 'left', 'Singapore': 'left', 'Hong Kong': 'left', 'United States': 'left', 'Canada': 'left', 'New Zealand': 'left', 'Japan': 'left', 'Thailand': 'stackR', 'Malaysia': 'stackR'}[datum.label]",
+              "as": "al"
+            },
+            {
+              "calculate": "datum.label + '  ' + '$' + format(datum.export_value_million_AUD, '.0f') + 'm'",
+              "as": "label_one"
+            }
+          ],
+          "layer": [
+            {
+              "mark": {
+                "type": "geoshape",
+                "filled": false,
+                "strokeCap": "round",
+                "clip": true,
+                "fill": null
+              },
+              "encoding": {
+                "shape": {
+                  "field": "route",
+                  "type": "geojson"
+                },
+                "strokeWidth": {
+                  "field": "line_px",
+                  "type": "quantitative",
+                  "scale": null
+                },
+                "stroke": {
+                  "value": "#c51b7d"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 0.7
+                  },
+                  "value": 0.06
+                },
+                "order": {
+                  "field": "export_value_million_AUD",
+                  "type": "quantitative",
+                  "sort": "descending"
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by value"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            },
+            {
+              "mark": {
+                "type": "circle",
+                "size": 18,
+                "color": "#c51b7d",
+                "clip": true
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0.1
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by value"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Malaysia'], datum.label) >= 0"
+                },
+                {
+                  "filter": "isValid(datum.lx)"
+                }
+              ],
+              "mark": {
+                "type": "circle",
+                "size": 110,
+                "filled": false,
+                "stroke": "#333",
+                "strokeWidth": 1
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Malaysia'], datum.label) >= 0"
+                },
+                {
+                  "filter": "isValid(datum.lx)"
+                }
+              ],
+              "mark": {
+                "type": "rule",
+                "color": "#8a8a8a",
+                "strokeWidth": 0.8
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "longitude2": {
+                  "field": "lx"
+                },
+                "latitude2": {
+                  "field": "ly"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Malaysia'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'left'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "lineHeight": 13,
+                "baseline": "middle",
+                "align": "left",
+                "dx": 8,
+                "stroke": "white",
+                "strokeWidth": 3,
+                "strokeJoin": "round",
+                "color": "white"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_lines"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Malaysia'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'left'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "lineHeight": 13,
+                "baseline": "middle",
+                "align": "left",
+                "dx": 8,
+                "color": "#222"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_lines"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by value"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Malaysia'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'center'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "lineHeight": 13,
+                "baseline": "middle",
+                "align": "center",
+                "stroke": "white",
+                "strokeWidth": 3,
+                "strokeJoin": "round",
+                "color": "white"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_lines"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Malaysia'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'center'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "lineHeight": 13,
+                "baseline": "middle",
+                "align": "center",
+                "color": "#222"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_lines"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by value"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Malaysia'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'stackR'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "baseline": "middle",
+                "align": "right",
+                "dx": -3,
+                "stroke": "white",
+                "strokeWidth": 3,
+                "strokeJoin": "round",
+                "color": "white"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_one"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "indexof(['China', 'United Kingdom', 'Singapore', 'Hong Kong', 'United States', 'Canada', 'New Zealand', 'Japan', 'Thailand', 'Malaysia'], datum.label) >= 0"
+                },
+                {
+                  "filter": "datum.al == 'stackR'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontSize": 11,
+                "fontWeight": 600,
+                "baseline": "middle",
+                "align": "right",
+                "dx": -3,
+                "color": "#222"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "tx",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "ty",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "label_one"
+                },
+                "opacity": {
+                  "condition": {
+                    "test": "pick == 'All' || datum.continent == pick",
+                    "value": 1
+                  },
+                  "value": 0
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by value"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            },
+            {
+              "mark": {
+                "type": "circle",
+                "size": 220,
+                "color": "#ffffff",
+                "opacity": 0.01,
+                "clip": true
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "tooltip": [
+                  {
+                    "field": "label",
+                    "title": "Market"
+                  },
+                  {
+                    "field": "rank",
+                    "title": "Rank by value"
+                  },
+                  {
+                    "field": "export_volume_million_litres",
+                    "type": "quantitative",
+                    "format": ",.1f",
+                    "title": "Volume (million litres)"
+                  },
+                  {
+                    "field": "export_value_million_AUD",
+                    "type": "quantitative",
+                    "format": "$,.1f",
+                    "title": "Value ($ million)"
+                  },
+                  {
+                    "field": "average_value_per_litre",
+                    "type": "quantitative",
+                    "format": "$.2f",
+                    "title": "Value per litre"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "data": {
+            "values": [
+              {
+                "lon": 133.78,
+                "lat": -25.27,
+                "t": "Australia"
+              }
+            ]
+          },
+          "layer": [
+            {
+              "mark": {
+                "type": "circle",
+                "size": 45,
+                "color": "#4d4d4d",
+                "opacity": 1
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "lon",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "lat",
+                  "type": "quantitative"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "align": "right",
+                "dx": -7,
+                "dy": 2,
+                "fontSize": 11,
+                "fontWeight": 600,
+                "color": "#4d4d4d"
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "lon",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "lat",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "t"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "data": {
+            "values": [
+              {
+                "lab": "$50m",
+                "px": 1.0290725358446644,
+                "x0": 0,
+                "x1": 40
+              },
+              {
+                "lab": "$250m",
+                "px": 3.1453626792233216,
+                "x0": 140,
+                "x1": 180
+              },
+              {
+                "lab": "$750m",
+                "px": 8.436088037669965,
+                "x0": 280,
+                "x1": 320
+              }
+            ]
+          },
+          "layer": [
+            {
+              "mark": {
+                "type": "rule",
+                "color": "#c51b7d",
+                "strokeCap": "round"
+              },
+              "encoding": {
+                "x": {
+                  "field": "x0",
+                  "type": "quantitative",
+                  "scale": null
+                },
+                "x2": {
+                  "field": "x1"
+                },
+                "y": {
+                  "value": 292
+                },
+                "strokeWidth": {
+                  "field": "px",
+                  "type": "quantitative",
+                  "scale": null
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "align": "left",
+                "baseline": "middle",
+                "dx": 11,
+                "fontSize": 12,
+                "color": "#333"
+              },
+              "encoding": {
+                "x": {
+                  "field": "x1",
+                  "type": "quantitative",
+                  "scale": null
+                },
+                "y": {
+                  "value": 292
+                },
+                "text": {
+                  "field": "lab"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 640,
+      "height": 28,
+      "data": {
+        "values": [
+          {
+            "t": [
+              "Sources: Wine Australia, Export Report, wineaustralia.com;",
+              "Natural Earth country boundaries, naturalearthdata.com."
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "x": 0,
+        "y": 0,
+        "fontSize": 10,
+        "color": "#666",
+        "lineHeight": 13
+      },
+      "encoding": {
+        "text": {
+          "field": "t"
+        }
+      }
+    }
+  ],
+  "spacing": 28,
+  "config": {
+    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
+    "title": {
+      "font": "Fraunces, Georgia, serif",
+      "fontSize": 18,
+      "fontWeight": 600,
+      "anchor": "start",
+      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
+      "subtitleFontSize": 13,
+      "subtitlePadding": 4
+    },
+    "view": {
+      "stroke": null
+    }
+  }
 }
