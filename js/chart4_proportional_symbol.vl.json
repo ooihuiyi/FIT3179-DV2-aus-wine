@@ -11,411 +11,347 @@
       "Colour = average grape price per tonne."
     ]
   },
-  "config": {
-    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
-    "title": {
-      "font": "Fraunces, Georgia, serif",
-      "fontSize": 18,
-      "anchor": "start",
-      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
-      "subtitleFontSize": 13,
-      "subtitlePadding": 4,
-      "fontWeight": 600
+  "params": [
+    {
+      "name": "zoom_level",
+      "value": 3000,
+      "bind": {
+        "input": "range",
+        "min": 800,
+        "max": 8000,
+        "step": 100,
+        "name": "Zoom: "
+      }
     },
-    "legend": {"titleFontSize": 12, "labelFontSize": 12},
-    "view": {"stroke": null}
-  },
+    {
+      "name": "center_to",
+      "value": [
+        142.6,
+        -35.2
+      ],
+      "bind": {
+        "input": "select",
+        "options": [
+          [
+            142.6,
+            -35.2
+          ],
+          [
+            115.3,
+            -33.9
+          ],
+          [
+            146.8,
+            -42
+          ],
+          [
+            134,
+            -29.5
+          ]
+        ],
+        "labels": [
+          "South east",
+          "Margaret River",
+          "Tasmania",
+          "All of Australia"
+        ],
+        "name": "Map centre: "
+      }
+    }
+  ],
   "vconcat": [
     {
-      "hconcat": [
+      "width": 720,
+      "height": 460,
+      "projection": {
+        "type": "conicEqualArea",
+        "parallels": [
+          -18,
+          -36
+        ],
+        "rotate": [
+          -134,
+          0
+        ],
+        "scale": {
+          "expr": "zoom_level"
+        },
+        "translate": [
+          360,
+          230
+        ],
+        "center": {
+          "expr": "[center_to[0] - 134, center_to[1]]"
+        }
+      },
+      "layer": [
         {
-          "width": 520,
-          "height": 350,
-          "projection": {
-            "type": "conicEqualArea",
-            "parallels": [-18, -36],
-            "rotate": [-134, 0],
-            "fit": {
-              "type": "Feature",
-              "geometry": {
-                "type": "LineString",
-                "coordinates": [
-                  [136.5, -32],
-                  [148.5, -32],
-                  [148.5, -38.5],
-                  [136.5, -38.5],
-                  [136.5, -32]
-                ]
-              },
-              "properties": {}
+          "data": {
+            "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/js/STE_2026_AUST_GDA2020.json",
+            "format": {
+              "type": "topojson",
+              "feature": "aus_states"
             }
           },
-          "layer": [
-            {
-              "data": {
-                "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/js/STE_2026_AUST_GDA2020.json",
-                "format": {"type": "topojson", "feature": "aus_states"}
-              },
-              "mark": {
-                "type": "geoshape",
-                "stroke": "white",
-                "strokeWidth": 1.5,
-                "fill": "#ebebeb",
-                "clip": true
-              },
-              "encoding": {
-                "tooltip": {
-                  "field": "properties.STE_NAME26",
-                  "type": "nominal",
-                  "title": "State"
-                }
-              }
-            },
-            {
-              "data": {
-                "values": [
-                  {"lon": 139.25, "lat": -36.05, "t": "SOUTH|AUSTRALIA"},
-                  {"lon": 143.3, "lat": -34.45, "t": "NEW SOUTH|WALES"},
-                  {"lon": 143.8, "lat": -37.2, "t": "VICTORIA"}
-                ]
-              },
-              "mark": {
-                "type": "text",
-                "lineBreak": "|",
-                "fontSize": 10,
-                "fontWeight": "bold",
-                "color": "#9a9a9a",
-                "clip": true,
-                "align": "left"
-              },
-              "encoding": {
-                "longitude": {"field": "lon", "type": "quantitative"},
-                "latitude": {"field": "lat", "type": "quantitative"},
-                "text": {"field": "t"}
-              }
-            },
-            {
-              "data": {
-                "values": [
-                  {
-                    "type": "Feature",
-                    "geometry": {
-                      "type": "LineString",
-                      "coordinates": [
-                        [139, -33.45],
-                        [139, -33.1],
-                        [143, -32.9],
-                        [146.9, -32.62],
-                        [146.94, -32.97]
-                      ]
-                    }
-                  }
-                ]
-              },
-              "mark": {
-                "type": "geoshape",
-                "filled": false,
-                "stroke": "#333",
-                "strokeWidth": 1,
-                "clip": true
-              }
-            },
-            {
-              "data": {
-                "values": [
-                  {
-                    "lon": 139,
-                    "lat": -32.5,
-                    "text": [
-                      "71% of the national crush,",
-                      "but under $370 a tonne (national average $570)"
-                    ]
-                  }
-                ]
-              },
-              "mark": {
-                "type": "text",
-                "fontSize": 12,
-                "fontStyle": "italic",
-                "color": "#333",
-                "clip": true,
-                "align": "left"
-              },
-              "encoding": {
-                "longitude": {"field": "lon", "type": "quantitative"},
-                "latitude": {"field": "lat", "type": "quantitative"},
-                "text": {"field": "text"}
-              }
-            },
-            {
-              "data": {
-                "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/gi_regions.csv"
-              },
-              "layer": [
-                {
-                  "params": [
-                    {
-                      "name": "hover",
-                      "select": {
-                        "type": "point",
-                        "fields": ["region"],
-                        "on": "pointerover",
-                        "clear": "pointerout"
-                      }
-                    }
-                  ],
-                  "mark": {
-                    "type": "circle",
-                    "stroke": "#3d5f8a",
-                    "strokeWidth": 0.8,
-                    "clip": true,
-                    "cursor": "pointer"
-                  },
-                  "encoding": {
-                    "longitude": {"field": "longitude", "type": "quantitative"},
-                    "latitude": {"field": "latitude", "type": "quantitative"},
-                    "size": {
-                      "field": "crush_2026_tonnes",
-                      "type": "quantitative",
-                      "title": "Crush 2026 (tonnes)",
-                      "scale": {"zero": true, "range": [0, 4000]},
-                      "legend": {
-                        "values": [50000, 150000, 300000],
-                        "format": ",.0f",
-                        "symbolFillColor": "white",
-                        "symbolStrokeColor": "#555",
-                        "titleLimit": 250,
-                        "orient": "none",
-                        "direction": "horizontal",
-                        "legendX": 540,
-                        "legendY": 278,
-                        "columnPadding": 10,
-                        "labelOffset": 4
-                      }
-                    },
-                    "color": {
-                      "field": "value_per_tonne",
-                      "type": "quantitative",
-                      "title": "Average grape price ($ per tonne, log scale)",
-                      "scale": {"type": "log", "range": ["#c6dbef", "#08306b"]},
-                      "legend": {
-                        "orient": "none",
-                        "direction": "horizontal",
-                        "gradientLength": 230,
-                        "format": "$,.0f",
-                        "values": [300, 1000, 3870],
-                        "titleLimit": 260,
-                        "legendX": 540,
-                        "legendY": 209
-                      }
-                    },
-                    "opacity": {
-                      "condition": {
-                        "param": "hover",
-                        "empty": true,
-                        "value": 0.9
-                      },
-                      "value": 0.3
-                    },
-                    "order": {
-                      "field": "crush_2026_tonnes",
-                      "sort": "descending"
-                    },
-                    "tooltip": [
-                      {"field": "region", "type": "nominal", "title": "Region"},
-                      {
-                        "field": "state_name",
-                        "type": "nominal",
-                        "title": "State"
-                      },
-                      {
-                        "field": "zone_type",
-                        "type": "nominal",
-                        "title": "Zone"
-                      },
-                      {
-                        "field": "crush_2026_tonnes",
-                        "type": "quantitative",
-                        "format": ",.0f",
-                        "title": "Crush 2026 (tonnes)"
-                      },
-                      {
-                        "field": "value_per_tonne",
-                        "type": "quantitative",
-                        "format": "$,.0f",
-                        "title": "Average grape price ($ per tonne)"
-                      },
-                      {
-                        "field": "percentage_change",
-                        "type": "quantitative",
-                        "format": "+.1f",
-                        "title": "Crush change from 2025 (%)"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "transform": [
-                    {
-                      "filter": "datum.zone_type == 'Warm inland' && datum.region != 'Murray Darling - Swan Hill'"
-                    }
-                  ],
-                  "mark": {
-                    "type": "text",
-                    "fontWeight": "bold",
-                    "fontSize": 11,
-                    "color": "#08306b",
-                    "clip": true,
-                    "baseline": "middle"
-                  },
-                  "encoding": {
-                    "longitude": {"field": "longitude", "type": "quantitative"},
-                    "latitude": {"field": "latitude", "type": "quantitative"},
-                    "text": {"field": "region"}
-                  }
-                },
-                {
-                  "transform": [
-                    {"filter": "datum.region == 'Murray Darling - Swan Hill'"}
-                  ],
-                  "mark": {
-                    "type": "text",
-                    "fontWeight": "bold",
-                    "fontSize": 11,
-                    "color": "#08306b",
-                    "clip": true,
-                    "baseline": "middle",
-                    "lineHeight": 13,
-                    "dy": -6.5
-                  },
-                  "encoding": {
-                    "longitude": {"field": "longitude", "type": "quantitative"},
-                    "latitude": {"field": "latitude", "type": "quantitative"},
-                    "text": {"value": ["Murray", "Darling"]}
-                  }
-                },
-                {
-                  "transform": [{"filter": "datum.region == 'Barossa Valley'"}],
-                  "mark": {
-                    "type": "text",
-                    "align": "right",
-                    "dx": -14,
-                    "dy": -10,
-                    "fontSize": 11,
-                    "color": "#333",
-                    "clip": true
-                  },
-                  "encoding": {
-                    "longitude": {"field": "longitude", "type": "quantitative"},
-                    "latitude": {"field": "latitude", "type": "quantitative"},
-                    "text": {"field": "region"}
-                  }
-                },
-                {
-                  "transform": [{"filter": "datum.region == 'McLaren Vale'"}],
-                  "mark": {
-                    "type": "text",
-                    "align": "right",
-                    "dx": -14,
-                    "dy": 8,
-                    "fontSize": 11,
-                    "color": "#333",
-                    "clip": true
-                  },
-                  "encoding": {
-                    "longitude": {"field": "longitude", "type": "quantitative"},
-                    "latitude": {"field": "latitude", "type": "quantitative"},
-                    "text": {"field": "region"}
-                  }
-                }
-              ]
+          "mark": {
+            "type": "geoshape",
+            "stroke": "white",
+            "strokeWidth": 1.5,
+            "fill": "#ebebeb",
+            "clip": true
+          },
+          "encoding": {
+            "tooltip": {
+              "field": "properties.STE_NAME26",
+              "type": "nominal",
+              "title": "State"
             }
-          ]
+          }
         },
         {
-          "width": 310,
-          "height": 350,
-          "projection": {
-            "type": "conicEqualArea",
-            "parallels": [-18, -36],
-            "rotate": [-134, 0],
-            "fit": {
-              "type": "Feature",
-              "geometry": {
-                "type": "LineString",
-                "coordinates": [
-                  [113, -10.5],
-                  [154, -10.5],
-                  [154, -43.8],
-                  [113, -43.8]
-                ]
+          "data": {
+            "values": [
+              {
+                "lon": 139.25,
+                "lat": -36.05,
+                "t": "SOUTH|AUSTRALIA"
               },
-              "properties": {}
+              {
+                "lon": 143.3,
+                "lat": -34.45,
+                "t": "NEW SOUTH|WALES"
+              },
+              {
+                "lon": 143.8,
+                "lat": -37.2,
+                "t": "VICTORIA"
+              }
+            ]
+          },
+          "mark": {
+            "type": "text",
+            "lineBreak": "|",
+            "fontSize": 11,
+            "fontWeight": "bold",
+            "color": "#9a9a9a",
+            "clip": true,
+            "align": "left",
+            "opacity": {
+              "expr": "zoom_level >= 2500 ? 1 : 0"
+            }
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
             },
-            "extent": [[0, 56], [160, 192]]
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "t"
+            }
+          }
+        },
+        {
+          "data": {
+            "values": [
+              {
+                "type": "Feature",
+                "geometry": {
+                  "type": "LineString",
+                  "coordinates": [
+                    [
+                      139,
+                      -33.45
+                    ],
+                    [
+                      139,
+                      -33.1
+                    ],
+                    [
+                      143,
+                      -32.9
+                    ],
+                    [
+                      146.9,
+                      -32.62
+                    ],
+                    [
+                      146.94,
+                      -32.97
+                    ]
+                  ]
+                }
+              }
+            ]
+          },
+          "mark": {
+            "type": "geoshape",
+            "filled": false,
+            "stroke": "#333",
+            "strokeWidth": 1,
+            "clip": true,
+            "opacity": {
+              "expr": "zoom_level >= 2500 ? 1 : 0"
+            }
+          }
+        },
+        {
+          "data": {
+            "values": [
+              {
+                "lon": 139,
+                "lat": -32.5,
+                "text": [
+                  "71% of the national crush,",
+                  "but under $370 a tonne (national average $570)"
+                ]
+              }
+            ]
+          },
+          "mark": {
+            "type": "text",
+            "fontSize": 12,
+            "fontStyle": "italic",
+            "color": "#333",
+            "clip": true,
+            "align": "left",
+            "opacity": {
+              "expr": "zoom_level >= 2500 ? 1 : 0"
+            }
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "text"
+            }
+          }
+        },
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/gi_regions.csv"
           },
           "layer": [
             {
-              "data": {
-                "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/js/STE_2026_AUST_GDA2020.json",
-                "format": {"type": "topojson", "feature": "aus_states"}
-              },
-              "mark": {
-                "type": "geoshape",
-                "stroke": "white",
-                "strokeWidth": 0.5,
-                "fill": "#ebebeb"
-              }
-            },
-            {
-              "data": {
-                "values": [
-                  {
-                    "type": "Feature",
-                    "geometry": {
-                      "type": "LineString",
-                      "coordinates": [
-                        [136.5, -32],
-                        [148.5, -32],
-                        [148.5, -38.5],
-                        [136.5, -38.5],
-                        [136.5, -32]
-                      ]
-                    }
-                  }
-                ]
-              },
-              "mark": {
-                "type": "geoshape",
-                "filled": false,
-                "stroke": "#333",
-                "strokeWidth": 1.2
-              }
-            },
-            {
-              "data": {
-                "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/gi_regions.csv"
-              },
-              "transform": [
+              "params": [
                 {
-                  "filter": "datum.region == 'Margaret River' || datum.region == 'Tasmania'"
+                  "name": "hover",
+                  "select": {
+                    "type": "point",
+                    "fields": [
+                      "region"
+                    ],
+                    "on": "pointerover",
+                    "clear": "pointerout"
+                  }
                 }
               ],
               "mark": {
                 "type": "circle",
-                "opacity": 0.9,
                 "stroke": "#3d5f8a",
-                "strokeWidth": 0.8
+                "strokeWidth": 0.8,
+                "clip": true,
+                "cursor": "pointer"
               },
               "encoding": {
-                "longitude": {"field": "longitude", "type": "quantitative"},
-                "latitude": {"field": "latitude", "type": "quantitative"},
-                "size": {"field": "crush_2026_tonnes", "type": "quantitative"},
-                "color": {"field": "value_per_tonne", "type": "quantitative"},
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "size": {
+                  "field": "crush_2026_tonnes",
+                  "type": "quantitative",
+                  "title": "Crush 2026 (tonnes)",
+                  "scale": {
+                    "zero": true,
+                    "range": [
+                      0,
+                      4000
+                    ]
+                  },
+                  "legend": {
+                    "values": [
+                      50000,
+                      150000,
+                      300000
+                    ],
+                    "format": ",.0f",
+                    "symbolFillColor": "white",
+                    "symbolStrokeColor": "#555",
+                    "orient": "none",
+                    "direction": "horizontal",
+                    "legendX": 740,
+                    "legendY": 80,
+                    "columnPadding": 10,
+                    "labelOffset": 4
+                  }
+                },
+                "color": {
+                  "field": "value_per_tonne",
+                  "type": "quantitative",
+                  "title": "Average grape price ($ per tonne, log scale)",
+                  "scale": {
+                    "type": "log",
+                    "range": [
+                      "#c6dbef",
+                      "#08306b"
+                    ]
+                  },
+                  "legend": {
+                    "orient": "none",
+                    "direction": "horizontal",
+                    "gradientLength": 230,
+                    "format": "$,.0f",
+                    "values": [
+                      300,
+                      1000,
+                      3870
+                    ],
+                    "legendX": 740,
+                    "legendY": 0
+                  }
+                },
+                "opacity": {
+                  "condition": {
+                    "param": "hover",
+                    "empty": true,
+                    "value": 0.9
+                  },
+                  "value": 0.3
+                },
+                "order": {
+                  "field": "crush_2026_tonnes",
+                  "sort": "descending"
+                },
                 "tooltip": [
-                  {"field": "region", "type": "nominal", "title": "Region"},
-                  {"field": "state_name", "type": "nominal", "title": "State"},
-                  {"field": "zone_type", "type": "nominal", "title": "Zone"},
+                  {
+                    "field": "region",
+                    "type": "nominal",
+                    "title": "Region"
+                  },
+                  {
+                    "field": "state_name",
+                    "type": "nominal",
+                    "title": "State"
+                  },
+                  {
+                    "field": "zone_type",
+                    "type": "nominal",
+                    "title": "Zone"
+                  },
                   {
                     "field": "crush_2026_tonnes",
                     "type": "quantitative",
@@ -438,107 +374,231 @@
               }
             },
             {
-              "data": {
-                "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/gi_regions.csv"
-              },
-              "transform": [{"filter": "datum.region == 'Margaret River'"}],
+              "transform": [
+                {
+                  "filter": "datum.zone_type == 'Warm inland' && datum.region != 'Murray Darling - Swan Hill'"
+                }
+              ],
               "mark": {
                 "type": "text",
-                "align": "left",
-                "dx": -7,
+                "fontWeight": "bold",
+                "fontSize": 12,
+                "color": "#08306b",
+                "clip": true,
                 "baseline": "middle",
-                "fontSize": 9,
+                "opacity": {
+                  "expr": "zoom_level >= 2500 ? 1 : 0"
+                }
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "region"
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "datum.region == 'Murray Darling - Swan Hill'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "fontWeight": "bold",
+                "fontSize": 12,
+                "color": "#08306b",
+                "clip": true,
+                "baseline": "middle",
+                "lineHeight": 13,
+                "dy": -6.5,
+                "opacity": {
+                  "expr": "zoom_level >= 2500 ? 1 : 0"
+                }
+              },
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "value": [
+                    "Murray",
+                    "Darling"
+                  ]
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "datum.region == 'Barossa Valley'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "align": "right",
+                "dx": -14,
+                "dy": -10,
+                "fontSize": 12,
                 "color": "#333",
-                "dy": 15
+                "clip": true,
+                "opacity": {
+                  "expr": "zoom_level >= 2500 ? 1 : 0"
+                }
               },
               "encoding": {
-                "longitude": {"field": "longitude", "type": "quantitative"},
-                "latitude": {"field": "latitude", "type": "quantitative"},
-                "text": {"field": "region"}
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "region"
+                }
               }
             },
             {
-              "data": {
-                "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/gi_regions.csv"
+              "transform": [
+                {
+                  "filter": "datum.region == 'McLaren Vale'"
+                }
+              ],
+              "mark": {
+                "type": "text",
+                "align": "right",
+                "dx": -14,
+                "dy": 8,
+                "fontSize": 12,
+                "color": "#333",
+                "clip": true,
+                "opacity": {
+                  "expr": "zoom_level >= 2500 ? 1 : 0"
+                }
               },
-              "transform": [{"filter": "datum.region == 'Tasmania'"}],
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "region"
+                }
+              }
+            },
+            {
+              "transform": [
+                {
+                  "filter": "datum.region == 'Margaret River'"
+                }
+              ],
               "mark": {
                 "type": "text",
                 "align": "left",
-                "dx": 9,
+                "dx": 10,
                 "baseline": "middle",
-                "fontSize": 9,
-                "color": "#333"
+                "fontSize": 12,
+                "color": "#333",
+                "clip": true
               },
               "encoding": {
-                "longitude": {"field": "longitude", "type": "quantitative"},
-                "latitude": {"field": "latitude", "type": "quantitative"},
-                "text": {"field": "region"}
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "field": "region"
+                }
               }
             },
             {
-              "data": {"values": [{"t": "Outside main map: Tasmania"}]},
+              "transform": [
+                {
+                  "filter": "datum.region == 'Tasmania'"
+                }
+              ],
               "mark": {
                 "type": "text",
                 "align": "left",
-                "baseline": "top",
-                "x": 0,
-                "y": 0,
-                "fontStyle": "italic",
+                "dx": 10,
+                "baseline": "middle",
                 "fontSize": 12,
-                "color": "#222"
-              },
-              "encoding": {"text": {"field": "t"}}
-            },
-            {
-              "data": {"values": [{"t": "earns the most per tonne ($3,870)"}]},
-              "mark": {
-                "type": "text",
-                "align": "left",
-                "baseline": "top",
-                "x": 0,
-                "y": 16,
                 "fontStyle": "italic",
-                "fontSize": 12,
-                "color": "#222"
+                "color": "#333",
+                "clip": true,
+                "lineHeight": 15
               },
-              "encoding": {"text": {"field": "t"}}
-            },
-            {
-              "data": {"values": [{"t": "Box shows main map area"}]},
-              "mark": {
-                "type": "text",
-                "align": "left",
-                "baseline": "top",
-                "x": 0,
-                "y": 34,
-                "fontStyle": "normal",
-                "fontSize": 11,
-                "color": "#555"
-              },
-              "encoding": {"text": {"field": "t"}}
+              "encoding": {
+                "longitude": {
+                  "field": "longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "latitude",
+                  "type": "quantitative"
+                },
+                "text": {
+                  "value": [
+                    "Tasmania earns the most",
+                    "per tonne ($3,870)"
+                  ]
+                }
+              }
             }
           ]
         }
-      ],
-      "spacing": 20
+      ]
     },
     {
-      "width": 520,
+      "width": 720,
       "height": 14,
       "data": {
         "values": [
-          {"t": "Source: Wine Australia, National Vintage Report 2026"}
+          {
+            "t": "Source: Wine Australia, National Vintage Report 2026"
+          }
         ]
       },
       "mark": {
         "type": "text",
         "align": "left",
         "baseline": "top",
-        "fontSize": 10,
+        "fontSize": 11,
         "color": "#666"
       },
-      "encoding": {"x": {"value": 0}, "y": {"value": 0}, "text": {"field": "t"}}
+      "encoding": {
+        "x": {
+          "value": 0
+        },
+        "y": {
+          "value": 0
+        },
+        "text": {
+          "field": "t"
+        }
+      }
     }
   ],
   "spacing": 8
