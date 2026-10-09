@@ -1,0 +1,1069 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Pareto chart of Australia's wine export value by market, year to June 2026: the 12 largest markets plus all other markets combined. China, the United Kingdom and the United States bring in 58% of export value, and the top 8 markets pass 80%.",
+  "title": {
+    "text": [
+      "Three markets bring in 58% of",
+      "Australia's wine export dollars"
+    ],
+    "subtitle": [
+      "Share of export value by market (bars)",
+      "and running total (line), year to June 2026."
+    ]
+  },
+  "width": 640,
+  "height": 320,
+  "data": {
+    "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_by_country.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "export_value_million_AUD": "number",
+        "average_value_per_litre": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "2026",
+      "as": "full_year"
+    },
+    {
+      "lookup": "full_year",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_sales_historical.csv",
+          "format": {
+            "type": "csv",
+            "parse": {
+              "full_year": "number",
+              "value_aud_million": "number"
+            }
+          }
+        },
+        "key": "full_year",
+        "fields": [
+          "value_aud_million"
+        ]
+      }
+    },
+    {
+      "calculate": "datum.export_value_million_AUD / datum.value_aud_million * 100",
+      "as": "share"
+    },
+    {
+      "window": [
+        {
+          "op": "row_number",
+          "as": "order"
+        }
+      ],
+      "sort": [
+        {
+          "field": "export_value_million_AUD",
+          "order": "descending"
+        }
+      ]
+    },
+    {
+      "filter": "datum.order <= 12"
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "sum",
+          "field": "share",
+          "as": "top_share"
+        }
+      ]
+    },
+    {
+      "calculate": "datum.order == 1 ? [0, 1] : [0]",
+      "as": "part"
+    },
+    {
+      "flatten": [
+        "part"
+      ]
+    },
+    {
+      "calculate": "datum.part == 1 ? 'All other markets' : (datum.destination_market == 'Mainland China' ? 'China' : datum.destination_market)",
+      "as": "market"
+    },
+    {
+      "calculate": "datum.market",
+      "as": "short"
+    },
+    {
+      "calculate": "datum.part == 1 ? 100 - datum.top_share : datum.share",
+      "as": "share"
+    },
+    {
+      "calculate": "datum.part == 1 ? 99 : datum.order",
+      "as": "order"
+    },
+    {
+      "calculate": "datum.part == 1 ? null : datum.export_value_million_AUD",
+      "as": "value_m"
+    },
+    {
+      "window": [
+        {
+          "op": "sum",
+          "field": "share",
+          "as": "cum"
+        }
+      ],
+      "sort": [
+        {
+          "field": "order"
+        }
+      ],
+      "frame": [
+        null,
+        0
+      ]
+    },
+    {
+      "calculate": "datum.cum - datum.share",
+      "as": "cum_before"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "color": "#bbbbbb",
+        "strokeDash": [
+          3,
+          3
+        ]
+      },
+      "encoding": {
+        "y": {
+          "datum": 80,
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {}
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "baseline": "bottom",
+        "x": "width",
+        "dy": -4,
+        "fontSize": 11,
+        "color": "#777"
+      },
+      "encoding": {
+        "y": {
+          "datum": 80,
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "text": {
+          "value": "80% of export value"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "bar",
+        "width": {
+          "band": 0.75
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative",
+          "title": "Share of export value (%)",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          },
+          "axis": {
+            "values": [
+              0,
+              20,
+              40,
+              60,
+              80,
+              100
+            ],
+            "gridColor": "#ececec",
+            "domainColor": "#bbbbbb",
+            "tickColor": "#bbbbbb"
+          }
+        },
+        "color": {
+          "condition": [
+            {
+              "test": "datum.order == 99",
+              "value": "#c8c8c8"
+            },
+            {
+              "test": "datum.order <= 3",
+              "value": "#8e0152"
+            }
+          ],
+          "value": "#e9a3c9"
+        },
+        "tooltip": [
+          {
+            "field": "market",
+            "title": "Market"
+          },
+          {
+            "field": "value_m",
+            "type": "quantitative",
+            "format": "$,.1f",
+            "title": "Export value (A$ million)"
+          },
+          {
+            "field": "share",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Share of export value (%)"
+          },
+          {
+            "field": "cum",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Running total (%)"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.order != 1"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "dy": -5,
+        "baseline": "bottom",
+        "fontSize": 10,
+        "color": "#555"
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "text": {
+          "field": "share",
+          "type": "quantitative",
+          "format": ".0f"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.order == 1"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "dy": 14,
+        "baseline": "middle",
+        "fontSize": 11,
+        "fontWeight": 700,
+        "color": "white"
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "text": {
+          "field": "share",
+          "type": "quantitative",
+          "format": ".0f"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "color": "#8a8a8a",
+        "strokeWidth": 2,
+        "point": {
+          "color": "#8a8a8a",
+          "size": 22
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "field": "cum",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "tooltip": [
+          {
+            "field": "market",
+            "title": "Market"
+          },
+          {
+            "field": "value_m",
+            "type": "quantitative",
+            "format": "$,.1f",
+            "title": "Export value (A$ million)"
+          },
+          {
+            "field": "share",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Share of export value (%)"
+          },
+          {
+            "field": "cum",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Running total (%)"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.order == 3 || (datum.cum >= 80 && datum.cum_before < 80)"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "shape": "circle",
+        "size": 150,
+        "filled": false,
+        "stroke": "#333",
+        "strokeWidth": 1.2
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "field": "cum",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "t": [
+              "Source: Wine Australia, Export Report, wineaustralia.com.",
+              "Shares are of total wine export value, free on board.",
+              "'All other markets' combines every market outside the top 12."
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "x": -40,
+        "y": 400,
+        "fontSize": 10,
+        "color": "#666",
+        "lineHeight": 13
+      },
+      "encoding": {
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.order == 3"
+        },
+        {
+          "calculate": "datum.cum",
+          "as": "ly0"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#8a8a8a",
+        "strokeWidth": 0.8,
+        "x2Offset": 30
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "field": "ly0",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "y2": {
+          "datum": 51.5
+        },
+        "x2": {
+          "field": "short"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.order == 3"
+        },
+        {
+          "calculate": "['Top 3 markets', 'together: ' + format(datum.cum, '.0f') + '%']",
+          "as": "t"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 35,
+        "baseline": "top",
+        "fontSize": 11,
+        "lineHeight": 13,
+        "color": "#333",
+        "fontWeight": 600
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "datum": 52,
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.cum >= 80 && datum.cum_before < 80"
+        },
+        {
+          "calculate": "datum.cum + -2.5",
+          "as": "ly0"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#8a8a8a",
+        "strokeWidth": 0.8
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "field": "ly0",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "y2": {
+          "datum": 71
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.cum >= 80 && datum.cum_before < 80"
+        },
+        {
+          "calculate": "['80% reached by the', 'top ' + datum.order + ' markets (' + format(datum.cum, '.0f') + '%)']",
+          "as": "t"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": -3,
+        "baseline": "top",
+        "fontSize": 11,
+        "lineHeight": 13,
+        "color": "#333",
+        "fontWeight": 600
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "datum": 70,
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.market == 'United Kingdom'"
+        },
+        {
+          "calculate": "datum.share + 5.5",
+          "as": "ly0"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#8a8a8a",
+        "strokeWidth": 0.8
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "field": "ly0",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "y2": {
+          "datum": 26
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.market == 'United Kingdom'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": -3,
+        "baseline": "bottom",
+        "fontSize": 10.5,
+        "lineHeight": 13,
+        "color": "#333",
+        "fontStyle": "italic"
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "datum": 31,
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "text": {
+          "value": [
+            "2nd by value, but among",
+            "the lowest per litre (chart 10)"
+          ]
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.market == 'United Kingdom'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": -3,
+        "baseline": "bottom",
+        "fontSize": 10.5,
+        "lineHeight": 13,
+        "color": "#333",
+        "fontStyle": "normal",
+        "fontWeight": 700,
+        "dy": -21
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "datum": 28,
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "text": {
+          "value": "United Kingdom"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.market == 'Malaysia'"
+        },
+        {
+          "calculate": "datum.share + 5.5",
+          "as": "ly0"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#8a8a8a",
+        "strokeWidth": 0.8
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "field": "ly0",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "y2": {
+          "datum": 16
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.market == 'Malaysia'"
+        },
+        {
+          "calculate": "['Highest price per litre,', 'yet ' + format(datum.share, '.0f') + '% of value (chart 10)']",
+          "as": "t"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": -3,
+        "baseline": "bottom",
+        "fontSize": 10.5,
+        "lineHeight": 13,
+        "color": "#333",
+        "fontStyle": "italic"
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "datum": 21,
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.market == 'Malaysia'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": -3,
+        "baseline": "bottom",
+        "fontSize": 10.5,
+        "lineHeight": 13,
+        "color": "#333",
+        "fontStyle": "normal",
+        "fontWeight": 700,
+        "dy": -21
+      },
+      "encoding": {
+        "x": {
+          "field": "short",
+          "type": "nominal",
+          "sort": {
+            "field": "order",
+            "op": "min"
+          },
+          "title": null,
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "split(datum.label, ' ')",
+            "labelLineHeight": 13,
+            "labelColor": "#333",
+            "ticks": false,
+            "domainColor": "#bbbbbb",
+            "labelPadding": 6,
+            "labelFontSize": 11
+          }
+        },
+        "y": {
+          "datum": 18.5,
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "text": {
+          "value": "Malaysia"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
+    "title": {
+      "font": "Fraunces, Georgia, serif",
+      "fontSize": 18,
+      "fontWeight": 600,
+      "anchor": "start",
+      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
+      "subtitleFontSize": 13,
+      "subtitlePadding": 4
+    },
+    "axis": {
+      "labelColor": "#555",
+      "titleColor": "#333",
+      "titleFontWeight": "normal",
+      "labelFontSize": 11,
+      "titleFontSize": 12
+    },
+    "view": {
+      "stroke": null
+    }
+  }
+}
