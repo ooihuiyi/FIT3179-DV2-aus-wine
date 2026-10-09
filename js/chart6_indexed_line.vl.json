@@ -2,10 +2,13 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
   "description": "Line chart of Australian wine exports from 2015 to 2026, indexed so 2015 equals 100. Export volume fell 17% while export value rose 21%, peaking in 2019 and dipping during China's tariffs.",
   "title": {
-    "text": "Since 2015, export litres fell 17% but dollars rose 21%",
+    "text": [
+      "Since 2015, export litres fell 17%",
+      "but dollars rose 21%"
+    ],
     "subtitle": [
       "Australian wine exports, indexed to 2015 = 100.",
-      "Above 100 = more than in 2015; below 100 = less."
+      "Above 100 = more than in 2015; below = less."
     ]
   },
   "width": 560,
@@ -106,7 +109,7 @@
       "data": {
         "values": [
           {
-            "x": 2021.3,
+            "x": 2021.08,
             "t": [
               "China tariffs",
               "began in 2021.",
@@ -276,11 +279,11 @@
           ]
         },
         {
-          "calculate": "'$' + format(datum.value_aud_million, ',.0f') + ' (index ' + format(datum['Value ($)'], '.0f') + ')'",
+          "calculate": "'$' + format(datum.value_aud_million, ',.0f') + ' million (index ' + format(datum['Value ($)'], '.0f') + ')'",
           "as": "value_text"
         },
         {
-          "calculate": "format(datum.volume_million_litre, ',.1f') + ' (index ' + format(datum['Volume (litres)'], '.0f') + ')'",
+          "calculate": "format(datum.volume_million_litre, ',.1f') + ' million litres (index ' + format(datum['Volume (litres)'], '.0f') + ')'",
           "as": "volume_text"
         }
       ],
@@ -333,12 +336,12 @@
           {
             "field": "value_text",
             "type": "nominal",
-            "title": "Export value(million)"
+            "title": "Export value"
           },
           {
             "field": "volume_text",
             "type": "nominal",
-            "title": "Export volume(million litres)"
+            "title": "Export volume"
           }
         ]
       }
@@ -398,7 +401,8 @@
           {
             "t": [
               "Source: Wine Australia, Export Report,",
-              "wineaustralia.com/market-insights"
+              "wineaustralia.com/market-insights",
+              "2026 means July 2025 to June 2026."
             ]
           }
         ]

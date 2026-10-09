@@ -7,8 +7,8 @@
       "but China pays the most for it"
     ],
     "subtitle": [
-      "Share of Australia's wine exports, 2026: litres vs dollars.",
-      "Six largest markets by export value."
+      "Share of Australia's wine exports, year to June 2026.",
+      "Litres vs dollars, six largest markets by value."
     ]
   },
   "width": 560,
@@ -415,7 +415,8 @@
           {
             "t": [
               "Source: Wine Australia, Export Report, wineaustralia.com.",
-              "Shares are of Australia's total wine exports in 2026."
+              "Shares are of Australia's total wine exports",
+              "in the year to June 2026."
             ]
           }
         ]
