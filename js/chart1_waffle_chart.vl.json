@@ -5,25 +5,13 @@
     "text": ["South Australia crushes 52% of", "Australia's wine grapes"],
     "subtitle": [
       "Share of the national grape crush, 2026 vintage.",
-      "One square = 1% of all grapes crushed."
+      "One square = 1% of all grapes crushed.",
+      "Other states: Western Australia, Tasmania and Queensland."
     ]
   },
   "width": 260,
   "height": 260,
-  "config": {
-    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
-    "title": {
-      "font": "Fraunces, Georgia, serif",
-      "fontSize": 18,
-      "fontWeight": 600,
-      "anchor": "start",
-      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
-      "subtitleFontSize": 13,
-      "subtitlePadding": 4
-    },
-    "legend": {"titleFontSize": 12, "labelFontSize": 12},
-    "view": {"stroke": null}
-  },
+  "config": {},
   "layer": [
     {
       "transform": [
@@ -79,7 +67,7 @@
             "symbolSize": 200,
             "symbolStrokeColor": "#b9b3dc",
             "symbolStrokeWidth": 0.6,
-            "labelLimit": 220,
+            "labelLimit": 0,
             "rowPadding": 8
           }
         },
