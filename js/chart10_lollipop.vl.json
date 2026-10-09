@@ -1,0 +1,693 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Lollipop chart of average export value per litre in Australian dollars for 20 export markets in 2026, sorted from highest to lowest. Malaysia pays the most at A$18.25, almost 5 times the A$3.84 average. The nine highest-paying markets, shaded, are all in Asia; the United Kingdom, the largest market by volume, pays A$1.77.",
+  "title": {
+    "text": [
+      "Malaysia pays the most for Australian wine,",
+      "almost 5 times the average per litre"
+    ],
+    "subtitle": [
+      "Average export value per litre (A$), 20 markets,",
+      "year to June 2026."
+    ]
+  },
+  "width": 560,
+  "height": 440,
+  "data": {
+    "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_by_country.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "export_value_million_AUD": "number",
+        "export_volume_million_litres": "number",
+        "average_value_per_litre": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "2026",
+      "as": "full_year"
+    },
+    {
+      "lookup": "full_year",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_sales_historical.csv",
+          "format": {
+            "type": "csv",
+            "parse": {
+              "full_year": "number",
+              "volume_million_litre": "number",
+              "value_aud_million": "number"
+            }
+          }
+        },
+        "key": "full_year",
+        "fields": [
+          "volume_million_litre",
+          "value_aud_million"
+        ]
+      }
+    },
+    {
+      "calculate": "datum.value_aud_million / datum.volume_million_litre",
+      "as": "national_avg"
+    },
+    {
+      "calculate": "datum.destination_market == 'Mainland China' ? 'China' : datum.destination_market",
+      "as": "market"
+    },
+    {
+      "window": [
+        {
+          "op": "rank",
+          "as": "price_rank"
+        }
+      ],
+      "sort": [
+        {
+          "field": "average_value_per_litre",
+          "order": "descending"
+        }
+      ]
+    }
+  ],
+  "layer": [
+    {
+      "transform": [
+        {
+          "filter": "datum.price_rank <= 9"
+        }
+      ],
+      "mark": {
+        "type": "rect",
+        "color": "#f0f0f0"
+      },
+      "encoding": {
+        "y": {
+          "field": "market",
+          "type": "nominal",
+          "sort": {
+            "field": "average_value_per_litre",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelColor": "#333",
+            "labelFontSize": 11,
+            "labelPadding": 6,
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'United Kingdom' || datum.value == 'Malaysia'",
+                "value": 700
+              },
+              "value": 400
+            }
+          },
+          "scale": {
+            "paddingInner": 0
+          }
+        },
+        "x": {
+          "datum": 0,
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              20
+            ]
+          }
+        },
+        "x2": {
+          "datum": 20
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "aggregate": [
+            {
+              "op": "max",
+              "field": "national_avg",
+              "as": "avg"
+            }
+          ]
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#333",
+        "strokeDash": [
+          4,
+          3
+        ]
+      },
+      "encoding": {
+        "x": {
+          "field": "avg",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              20
+            ]
+          }
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "aggregate": [
+            {
+              "op": "max",
+              "field": "national_avg",
+              "as": "avg"
+            }
+          ]
+        },
+        {
+          "calculate": "'Average A$' + format(datum.avg, '.2f')",
+          "as": "t"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": -30,
+        "y": -8,
+        "fontSize": 11,
+        "color": "#333"
+      },
+      "encoding": {
+        "x": {
+          "field": "avg",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              20
+            ]
+          }
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "rule",
+        "color": "#e3cf94",
+        "strokeWidth": 2.5
+      },
+      "encoding": {
+        "y": {
+          "field": "market",
+          "type": "nominal",
+          "sort": {
+            "field": "average_value_per_litre",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelColor": "#333",
+            "labelFontSize": 11,
+            "labelPadding": 6,
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'United Kingdom' || datum.value == 'Malaysia'",
+                "value": 700
+              },
+              "value": 400
+            }
+          },
+          "scale": {
+            "paddingInner": 0
+          }
+        },
+        "x": {
+          "field": "average_value_per_litre",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              20
+            ]
+          }
+        },
+        "x2": {
+          "datum": 0
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 80,
+        "color": "#a87c0c",
+        "opacity": 1
+      },
+      "encoding": {
+        "y": {
+          "field": "market",
+          "type": "nominal",
+          "sort": {
+            "field": "average_value_per_litre",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelColor": "#333",
+            "labelFontSize": 11,
+            "labelPadding": 6,
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'United Kingdom' || datum.value == 'Malaysia'",
+                "value": 700
+              },
+              "value": 400
+            }
+          },
+          "scale": {
+            "paddingInner": 0
+          }
+        },
+        "x": {
+          "field": "average_value_per_litre",
+          "type": "quantitative",
+          "title": "Export value (A$ per litre)",
+          "scale": {
+            "domain": [
+              0,
+              20
+            ]
+          },
+          "axis": {
+            "values": [
+              0,
+              4,
+              8,
+              12,
+              16,
+              20
+            ],
+            "format": "$.0f",
+            "gridColor": "#f2f2f2",
+            "domainColor": "#bbbbbb",
+            "tickColor": "#bbbbbb"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "market",
+            "title": "Market"
+          },
+          {
+            "field": "continent",
+            "title": "Continent"
+          },
+          {
+            "field": "average_value_per_litre",
+            "type": "quantitative",
+            "format": "$.2f",
+            "title": "Value per litre"
+          },
+          {
+            "field": "export_value_million_AUD",
+            "type": "quantitative",
+            "format": "$,.1f",
+            "title": "Value ($ million)"
+          },
+          {
+            "field": "export_volume_million_litres",
+            "type": "quantitative",
+            "format": ",.1f",
+            "title": "Volume (million litres)"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 9,
+        "fontSize": 10,
+        "strokeWidth": 3,
+        "strokeJoin": "round"
+      },
+      "encoding": {
+        "y": {
+          "field": "market",
+          "type": "nominal",
+          "sort": {
+            "field": "average_value_per_litre",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelColor": "#333",
+            "labelFontSize": 11,
+            "labelPadding": 6,
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'United Kingdom' || datum.value == 'Malaysia'",
+                "value": 700
+              },
+              "value": 400
+            }
+          },
+          "scale": {
+            "paddingInner": 0
+          }
+        },
+        "x": {
+          "field": "average_value_per_litre",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              20
+            ]
+          }
+        },
+        "text": {
+          "field": "average_value_per_litre",
+          "type": "quantitative",
+          "format": "$.2f"
+        },
+        "stroke": {
+          "condition": {
+            "test": "datum.price_rank <= 9",
+            "value": "#f0f0f0"
+          },
+          "value": "white"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.price_rank <= 9",
+            "value": "#f0f0f0"
+          },
+          "value": "white"
+        },
+        "strokeWidth": {
+          "value": 5
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 9,
+        "fontSize": 10,
+        "color": "#555"
+      },
+      "encoding": {
+        "y": {
+          "field": "market",
+          "type": "nominal",
+          "sort": {
+            "field": "average_value_per_litre",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelColor": "#333",
+            "labelFontSize": 11,
+            "labelPadding": 6,
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'United Kingdom' || datum.value == 'Malaysia'",
+                "value": 700
+              },
+              "value": 400
+            }
+          },
+          "scale": {
+            "paddingInner": 0
+          }
+        },
+        "x": {
+          "field": "average_value_per_litre",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              20
+            ]
+          }
+        },
+        "text": {
+          "field": "average_value_per_litre",
+          "type": "quantitative",
+          "format": "$.2f"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.market == 'Taiwan'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 0,
+        "baseline": "middle",
+        "fontSize": 11,
+        "fontStyle": "italic",
+        "color": "#333",
+        "lineHeight": 14,
+        "dy": 12
+      },
+      "encoding": {
+        "y": {
+          "field": "market",
+          "type": "nominal",
+          "sort": {
+            "field": "average_value_per_litre",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelColor": "#333",
+            "labelFontSize": 11,
+            "labelPadding": 6,
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'United Kingdom' || datum.value == 'Malaysia'",
+                "value": 700
+              },
+              "value": 400
+            }
+          },
+          "scale": {
+            "paddingInner": 0
+          }
+        },
+        "x": {
+          "datum": 13.6,
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              20
+            ]
+          }
+        },
+        "text": {
+          "value": [
+            "Shaded: the 9 highest-paying",
+            "markets, all in Asia"
+          ]
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.market == 'United Kingdom'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 44,
+        "baseline": "middle",
+        "fontSize": 11,
+        "fontStyle": "italic",
+        "color": "white",
+        "stroke": "white",
+        "strokeWidth": 5,
+        "strokeJoin": "round"
+      },
+      "encoding": {
+        "y": {
+          "field": "market",
+          "type": "nominal",
+          "sort": {
+            "field": "average_value_per_litre",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelColor": "#333",
+            "labelFontSize": 11,
+            "labelPadding": 6,
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'United Kingdom' || datum.value == 'Malaysia'",
+                "value": 700
+              },
+              "value": 400
+            }
+          },
+          "scale": {
+            "paddingInner": 0
+          }
+        },
+        "x": {
+          "field": "average_value_per_litre",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              20
+            ]
+          }
+        },
+        "text": {
+          "value": "largest market by volume (chart 9)"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.market == 'United Kingdom'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 44,
+        "baseline": "middle",
+        "fontSize": 11,
+        "fontStyle": "italic",
+        "color": "#333"
+      },
+      "encoding": {
+        "y": {
+          "field": "market",
+          "type": "nominal",
+          "sort": {
+            "field": "average_value_per_litre",
+            "order": "descending"
+          },
+          "title": null,
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelColor": "#333",
+            "labelFontSize": 11,
+            "labelPadding": 6,
+            "labelFontWeight": {
+              "condition": {
+                "test": "datum.value == 'United Kingdom' || datum.value == 'Malaysia'",
+                "value": 700
+              },
+              "value": 400
+            }
+          },
+          "scale": {
+            "paddingInner": 0
+          }
+        },
+        "x": {
+          "field": "average_value_per_litre",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              20
+            ]
+          }
+        },
+        "text": {
+          "value": "largest market by volume (chart 9)"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "t": [
+              "Source: Wine Australia, Export Report, wineaustralia.com.",
+              "Values are free on board (FOB), in Australian dollars.",
+              "Average = total export value / total export litres,",
+              "year to June 2026."
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "x": -95,
+        "y": 492,
+        "fontSize": 10,
+        "color": "#666",
+        "lineHeight": 13
+      },
+      "encoding": {
+        "text": {
+          "field": "t"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Urbanist, Helvetica Neue, Arial, sans-serif",
+    "title": {
+      "font": "Fraunces, Georgia, serif",
+      "fontSize": 18,
+      "fontWeight": 600,
+      "anchor": "start",
+      "subtitleFont": "Urbanist, Helvetica Neue, Arial, sans-serif",
+      "subtitleFontSize": 13,
+      "subtitlePadding": 4,
+      "offset": 18
+    },
+    "axis": {
+      "labelColor": "#555",
+      "titleColor": "#333",
+      "titleFontWeight": "normal",
+      "labelFontSize": 11,
+      "titleFontSize": 12
+    },
+    "view": {
+      "stroke": null
+    }
+  }
+}
