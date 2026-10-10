@@ -11,7 +11,7 @@
       "Log scale: equal gaps mean equal percentage falls."
     ]
   },
-  "width": 600,
+  "width": "container",
   "height": 380,
   "data": {
     "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/gi_regions.csv"
@@ -65,9 +65,10 @@
               200000,
               400000
             ],
-            "labelExpr": "format(datum.value / 1000, '.0f') + 'k'",
+            "labelExpr": "format(datum.value, ',.0f')",
             "grid": true,
-            "gridColor": "#ececec"
+            "gridColor": "#ececec",
+            "format": ",.0f"
           }
         },
         "detail": {
@@ -430,5 +431,9 @@
       }
     }
   ],
-  "config": {}
+  "config": {},
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  }
 }

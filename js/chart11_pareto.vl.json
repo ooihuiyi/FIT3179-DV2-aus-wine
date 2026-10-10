@@ -11,7 +11,7 @@
       "and running total (line), year to June 2026."
     ]
   },
-  "width": 640,
+  "width": "container",
   "height": 320,
   "data": {
     "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_by_country.csv",
@@ -256,7 +256,7 @@
             "field": "value_m",
             "type": "quantitative",
             "format": "$,.1f",
-            "title": "Export value (A$ million)"
+            "title": "Export value ($ million)"
           },
           {
             "field": "share",
@@ -423,7 +423,7 @@
             "field": "value_m",
             "type": "quantitative",
             "format": "$,.1f",
-            "title": "Export value (A$ million)"
+            "title": "Export value ($ million)"
           },
           {
             "field": "share",
@@ -1044,5 +1044,9 @@
       }
     }
   ],
-  "config": {}
+  "config": {},
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  }
 }

@@ -3,15 +3,15 @@
   "description": "Slope chart of the six largest wine export markets in 2026, comparing each market's share of Australia's export litres with its share of export dollars. The United Kingdom takes 32% of litres but 15% of dollars; China takes 13% of litres but 33% of dollars.",
   "title": {
     "text": [
-      "The UK takes the most wine,",
+      "The United Kingdom takes the most wine,",
       "but China pays the most for it"
     ],
     "subtitle": [
       "Share of Australia's wine exports, year to June 2026.",
-      "Litres vs dollars, six largest markets by value."
+      "Litres versus dollars, six largest markets by value."
     ]
   },
-  "width": 560,
+  "width": "container",
   "height": 400,
   "data": {
     "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_by_country.csv",
@@ -438,5 +438,9 @@
       }
     }
   ],
-  "config": {}
+  "config": {},
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  }
 }

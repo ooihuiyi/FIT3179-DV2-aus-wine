@@ -80,7 +80,7 @@
   ],
   "vconcat": [
     {
-      "width": 560,
+      "width": 700,
       "height": 170,
       "layer": [
         {
@@ -279,7 +279,7 @@
       ]
     },
     {
-      "width": 560,
+      "width": 700,
       "height": 170,
       "layer": [
         {
@@ -476,14 +476,14 @@
       ]
     },
     {
-      "width": 560,
+      "width": 700,
       "height": 10,
       "data": {
         "values": [
           {
             "t": [
               "Sources: Wine Australia, Export Report, wineaustralia.com;",
-              "RBA, trade-weighted index, rba.gov.au/statistics/tables",
+              "Reserve Bank of Australia, trade-weighted index, rba.gov.au/statistics/tables",
               "2026 means July 2025 to June 2026."
             ]
           }

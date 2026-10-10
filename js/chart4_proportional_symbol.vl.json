@@ -61,8 +61,8 @@
   ],
   "vconcat": [
     {
-      "width": 720,
-      "height": 460,
+      "width": 830,
+      "height": 500,
       "projection": {
         "type": "conicEqualArea",
         "parallels": [
@@ -77,8 +77,8 @@
           "expr": "zoom_level"
         },
         "translate": [
-          360,
-          230
+          415,
+          250
         ],
         "center": {
           "expr": "[center_to[0] - 134, center_to[1]]"
@@ -293,7 +293,7 @@
                     "symbolStrokeColor": "#555",
                     "orient": "none",
                     "direction": "horizontal",
-                    "legendX": 740,
+                    "legendX": 850,
                     "legendY": 80,
                     "columnPadding": 10,
                     "labelOffset": 4
@@ -320,7 +320,7 @@
                       1000,
                       3870
                     ],
-                    "legendX": 740,
+                    "legendX": 850,
                     "legendY": 0
                   }
                 },
@@ -568,11 +568,64 @@
               }
             }
           ]
+        },
+        {
+          "data": {
+            "values": [
+              {
+                "t": "How to read this map"
+              }
+            ]
+          },
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "top",
+            "x": 850,
+            "y": 190,
+            "fontSize": 13,
+            "fontWeight": 600,
+            "color": "#232027"
+          },
+          "encoding": {
+            "text": {
+              "field": "t"
+            }
+          }
+        },
+        {
+          "data": {
+            "values": [
+              {
+                "t": [
+                  "Bigger circle = more grapes crushed.",
+                  "Darker blue = higher price per tonne.",
+                  "Hover over a circle to see its numbers.",
+                  "Use the zoom and centre controls below."
+                ]
+              }
+            ]
+          },
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "top",
+            "x": 850,
+            "y": 212,
+            "fontSize": 12,
+            "lineHeight": 18,
+            "color": "#3a3640"
+          },
+          "encoding": {
+            "text": {
+              "field": "t"
+            }
+          }
         }
       ]
     },
     {
-      "width": 720,
+      "width": 830,
       "height": 14,
       "data": {
         "values": [

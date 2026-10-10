@@ -11,7 +11,7 @@
       "Above 100 = more than in 2015; below = less."
     ]
   },
-  "width": 560,
+  "width": "container",
   "height": 340,
   "data": {
     "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_sales_historical.csv",
@@ -424,5 +424,9 @@
       }
     }
   ],
-  "config": {}
+  "config": {},
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  }
 }

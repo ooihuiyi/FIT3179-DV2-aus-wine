@@ -1,17 +1,17 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Lollipop chart of average export value per litre in Australian dollars for 20 export markets in 2026, sorted from highest to lowest. Malaysia pays the most at A$18.25, almost 5 times the A$3.84 average. The nine highest-paying markets, shaded, are all in Asia; the United Kingdom, the largest market by volume, pays A$1.77.",
+  "description": "Lollipop chart of average export value per litre in Australian dollars for 20 export markets in 2026, sorted from highest to lowest. Malaysia pays the most at $18.25, almost 5 times the $3.84 average. The nine highest-paying markets, shaded, are all in Asia; the United Kingdom, the largest market by volume, pays $1.77.",
   "title": {
     "text": [
       "Malaysia pays the most for Australian wine,",
       "almost 5 times the average per litre"
     ],
     "subtitle": [
-      "Average export value per litre (A$), 20 markets,",
+      "Average export value per litre (Australian dollars), 20 markets,",
       "year to June 2026."
     ]
   },
-  "width": 560,
+  "width": "container",
   "height": 440,
   "data": {
     "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/export_by_country.csv",
@@ -171,7 +171,7 @@
           ]
         },
         {
-          "calculate": "'Average A$' + format(datum.avg, '.2f')",
+          "calculate": "'Average $' + format(datum.avg, '.2f')",
           "as": "t"
         }
       ],
@@ -284,7 +284,7 @@
         "x": {
           "field": "average_value_per_litre",
           "type": "quantitative",
-          "title": "Export value (A$ per litre)",
+          "title": "Export value ($ per litre)",
           "scale": {
             "domain": [
               0,
@@ -529,7 +529,7 @@
       "mark": {
         "type": "text",
         "align": "left",
-        "dx": 44,
+        "dx": 0,
         "baseline": "middle",
         "fontSize": 11,
         "fontStyle": "italic",
@@ -566,7 +566,7 @@
           }
         },
         "x": {
-          "field": "average_value_per_litre",
+          "datum": 4.3,
           "type": "quantitative",
           "scale": {
             "domain": [
@@ -589,7 +589,7 @@
       "mark": {
         "type": "text",
         "align": "left",
-        "dx": 44,
+        "dx": 0,
         "baseline": "middle",
         "fontSize": 11,
         "fontStyle": "italic",
@@ -623,7 +623,7 @@
           }
         },
         "x": {
-          "field": "average_value_per_litre",
+          "datum": 4.3,
           "type": "quantitative",
           "scale": {
             "domain": [
@@ -643,7 +643,7 @@
           {
             "t": [
               "Source: Wine Australia, Export Report, wineaustralia.com.",
-              "Values are free on board (FOB), in Australian dollars.",
+              "Values are free on board, in Australian dollars.",
               "Average = total export value / total export litres,",
               "year to June 2026."
             ]
@@ -667,5 +667,9 @@
       }
     }
   ],
-  "config": {}
+  "config": {},
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  }
 }

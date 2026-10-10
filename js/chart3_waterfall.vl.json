@@ -12,7 +12,7 @@
       "Bar colours match each state in the waffle chart."
     ]
   },
-  "width": 460,
+  "width": "container",
   "height": 250,
   "data": {
     "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/crush_by_state.csv"
@@ -163,7 +163,8 @@
             "tickCount": 7,
             "grid": true,
             "gridColor": "#ececec",
-            "labelExpr": "datum.value == 0 ? '0' : format(datum.value / 1000, '.0f') + 'k'"
+            "labelExpr": "format(datum.value, ',.0f')",
+            "format": ",.0f"
           }
         },
         "x2": {
@@ -451,5 +452,9 @@
       }
     }
   ],
-  "config": {}
+  "config": {},
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  }
 }
