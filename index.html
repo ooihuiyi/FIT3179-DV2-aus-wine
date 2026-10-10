@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Australian wine in 2026: a smaller crush, a pricier pour</title>
+  <meta name="description" content="A data story on Australia's 2026 wine grape crush and wine exports, using Wine Australia data.">
+  <meta name="author" content="Hui Yi Ooi">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Urbanist:wght@400;500;600;700&display=swap">
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@6.4.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.3.0"></script>
+</head>
+
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <h1>Australian wine in 2026: a smaller crush, a pricier pour</h1>
+      <p class="lede">Australia crushed 306,334 fewer tonnes of wine grapes in 2026, a fall of 19%. Yet each litre of wine sent overseas now earns 47% more than in 2015. This is the story of a shrinking harvest and a more valuable product.</p>
+
+      <dl class="key-figures">
+        <div><dt>Grapes lost, 2025 to 2026</dt><dd class="c-crush">306,334 tonnes</dd></div>
+        <div><dt>South Australia's share of the crush</dt><dd class="c-crush">52%</dd></div>
+        <div><dt>Export price per litre since 2015</dt><dd class="c-price">+47%</dd></div>
+      </dl>
+
+      <p class="byline">By Hui Yi Ooi for FIT3179 Data Visualisation 2, October 2026</p>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Act 1: the crush by state ===== -->
+    <section class="act wrap" id="states">
+      <h2>Where the grapes are grown</h2>
+
+      <!-- intro uses the same 2 columns as the charts below -->
+      <div class="cols-2 intro">
+        <p><span class="hl hl-crush">South Australia crushes over half</span> of the country's wine grapes, and every state <span class="hl hl-fall">crushed less</span> in 2026. The total crush is now 25% below the ten year average. Flooding hit the inland regions, but Wine Australia says the main cause was a deliberate cut in production as demand for wine weakened <span class="cite">(<a href="#ref-wa-2026e">Wine Australia, 2026e</a>)</span>.</p>
+        <div class="callout c-crush col-end">
+          <p class="callout-number">1.27 million tonnes</p>
+          <p class="callout-label">The smallest national crush since 2000 <span class="cite">(<a href="#ref-wa-2026e">Wine Australia, 2026e</a>)</span></p>
+        </div>
+      </div>
+
+      <div class="cols-2 viz-pair">
+        <div class="viz-col">
+          <figure class="viz"><div id="chart1"></div></figure>
+          <div class="note"><p>Three states crush 97% of all wine grapes. <span class="hl hl-crush">South Australia</span> alone crushed 658,087 tonnes, more than New South Wales and Victoria combined. Whatever happens in South Australia shapes the national total.</p></div>
+        </div>
+        <div class="viz-col col-end">
+          <figure class="viz"><div id="chart2"></div></figure>
+          <div class="note"><p>Every state <span class="hl hl-fall">crushed less</span> than in 2025. Tasmania fell the most, by 40%, while South Australia fell only 12%. Because South Australia is so large, its small fall still kept the national drop from being even bigger.</p></div>
+        </div>
+      </div>
+
+      <!-- chart 2/3, text 1/3 -->
+      <div class="split">
+        <figure class="viz"><div id="chart3"></div></figure>
+        <div class="note">
+          <div class="callout c-fall">
+            <p class="callout-number">7,626 tonnes</p>
+            <p class="callout-label">All that Tasmania lost, despite the steepest fall</p>
+          </div>
+          <p>Percentages hide scale. Tasmania fell the hardest, but lost only 7,626 tonnes. New South Wales, South Australia and Victoria lost 284,725 tonnes between them, which is 93% of all the grapes lost.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Act 2: regions ===== -->
+    <section class="act wrap" id="regions">
+      <h2>Region by region</h2>
+
+      <!-- right column starts where the map legend starts -->
+      <div class="cols-map intro">
+        <p>Australia's wine grapes come from two very different kinds of region. <span class="hl hl-crush">Warm inland regions</span> grow huge volumes cheaply, while cool climate regions grow far less but earn much more per tonne. Even with fewer grapes in 2026, the average grape price fell 6% to $570 a tonne, a sign that demand is still weak <span class="cite">(<a href="#ref-wa-2026e">Wine Australia, 2026e</a>)</span>.</p>
+        <p>The Riverina in New South Wales is typical of the inland trio: flat plains with a mean temperature of 25.8°C and only 229 millimetres of rain in the growing season <span class="cite">(<a href="#ref-wa-nd-c">Wine Australia, n.d.-c</a>)</span>. It crushed 204,506 tonnes in 2026 but earned just $338 a tonne. Zoom in near Adelaide to separate the smaller regions, or jump to Tasmania, which earns the most per tonne. Try it on the map below.</p>
+      </div>
+
+      <div class="viz-full">
+        <figure class="viz"><div id="chart4"></div></figure>
+      </div>
+
+      <!-- text 1/3, chart 2/3 -->
+      <div class="split text-left">
+        <div class="note"><p>Regions next to each other did not fall evenly. Padthaway crushed 28% less, while neighbouring Coonawarra barely changed, down under 1%. The log scale means equal gaps show equal percentage falls, so small and large regions can be compared fairly.</p>
+          <p>The two neighbours grow very different wine. Coonawarra is a cool strip of red soil over limestone, known for premium Cabernet Sauvignon. Padthaway is warmer, relies on irrigation and has long supplied fruit for larger commercial wines, the kind of wine where demand has been weakest <span class="cite">(Wine Australia, <a href="#ref-wa-nd-a">n.d.-a</a>, <a href="#ref-wa-nd-b">n.d.-b</a>)</span>.</p></div>
+        <figure class="viz"><div id="chart5"></div></figure>
+      </div>
+    </section>
+
+    <!-- ===== Act 3: exports over time ===== -->
+    <section class="act wrap" id="exports">
+      <h2>Less wine, more money</h2>
+      <div class="cols-2 intro">
+        <p>Since 2015, export <span class="hl hl-volume">litres fell 17%</span> while export <span class="hl hl-value">dollars rose 21%</span>. Australia is selling less wine overseas, but each litre is worth more.</p>
+        <div class="callout c-price">
+          <p class="callout-number">$3.84 a litre</p>
+          <p class="callout-label">Average export price in 2026, up from $2.61 in 2015</p>
+        </div>
+      </div>
+
+      <div class="split">
+        <figure class="viz"><div id="chart6"></div></figure>
+        <div class="note"><p>Both lines start at 100 in 2015, so each point shows the change since then. In 2019 China was Australia's largest wine market, worth $1.1 billion or 40% of all exports <span class="cite">(<a href="#ref-efa-2024">Export Finance Australia, 2024</a>)</span>. China placed heavy tariffs on Australian wine in late 2020 <span class="cite">(<a href="#ref-wa-2026c">Wine Australia, 2026c</a>)</span>, and export <span class="hl hl-value">value</span> fell 27% between 2021 and 2023.</p>
+          <p>The tariffs on bottled wine were removed on 29 March 2024. From April to December 2024, Australia shipped 83 million litres worth $902 million to mainland China, which is why <span class="hl hl-value">value</span> climbs again from 2024 <span class="cite">(<a href="#ref-wa-2025">Wine Australia, 2025</a>)</span>. That restocking has now ended: in 2026 exports to China fell 15%, and total <span class="hl hl-volume">volume</span> dropped below 600 million litres for the first time since 2004 <span class="cite">(<a href="#ref-wa-2026c">Wine Australia, 2026c</a>)</span>.</p></div>
+      </div>
+
+      <div class="split text-left">
+        <div class="note"><p>A weaker Australian dollar can make exports look more valuable. That is not what happened here. The <span class="hl hl-price">export price</span> rose from $2.61 to $3.84 a litre, while the trade weighted index stayed between 58 and 67 the whole time. The higher price came from the wine, not the currency. Worldwide wine drinking is at its lowest since 1961, and the losses are mostly in cheaper wine. In 2026, exports of wine worth $50 to $99.99 a litre grew 25%, while lower and mid priced wine fell <span class="cite">(Wine Australia, <a href="#ref-wa-2026a">2026a</a>, <a href="#ref-wa-2026c">2026c</a>)</span>.</p></div>
+        <figure class="viz"><div id="chart7"></div></figure>
+      </div>
+    </section>
+
+    <!-- ===== Act 4: markets ===== -->
+    <section class="act wrap" id="markets">
+      <h2>Where the wine goes</h2>
+      <div class="cols-2 intro">
+        <p>Among the 20 markets shown, Europe takes about twice the <span class="hl hl-volume">litres</span> of Asia, 253 million against 125 million. Asia pays almost three times the <span class="hl hl-value">dollars</span>, $1.22 billion against $452 million. Each market is drawn as one point near the centre of the country, because Wine Australia only reports exports at the national level.</p>
+        <div class="callout c-value">
+          <p class="callout-number">$1.22 billion</p>
+          <p class="callout-label">Paid by the Asian markets shown, against $452 million from Europe</p>
+        </div>
+      </div>
+
+      <div class="viz-full">
+        <figure class="viz"><div id="chart8"></div></figure>
+      </div>
+
+      <!-- half + half, text under each chart -->
+      <div class="cols-2 viz-pair">
+        <div class="viz-col">
+          <figure class="viz"><div id="chart9"></div></figure>
+          <div class="note"><p>The United Kingdom takes 32% of Australia's export litres but only 15% of the dollars. Mainland China is the reverse: 13% of litres, 33% of dollars. In 2024, 89% of Australian wine sent to the United Kingdom was shipped unpackaged and bottled there, which keeps the price per litre low <span class="cite">(<a href="#ref-wa-2025">Wine Australia, 2025</a>)</span>. United Kingdom volumes are now at their lowest in 25 years, though premium Australian wine has held up better <span class="cite">(<a href="#ref-wa-2026c">Wine Australia, 2026c</a>)</span>.</p></div>
+        </div>
+        <div class="viz-col">
+          <figure class="viz"><div id="chart10"></div></figure>
+          <div class="note"><p>Malaysia pays $18.25 a litre, almost five times the $3.84 average, and Singapore is close behind at $18.13. All nine highest paying markets are in Asia, where exports are growing: Thailand reached a record, up 54% in value, as demand for premium wine rose <span class="cite">(<a href="#ref-wa-2026a">Wine Australia, 2026a</a>)</span>. Germany pays the least, at $1.18 a litre. Prices are export value divided by export volume for each market, so they may differ by a few cents from Wine Australia's own dashboard.</p></div>
+        </div>
+      </div>
+
+      <div class="split">
+        <figure class="viz"><div id="chart11"></div></figure>
+        <div class="note">
+          <div class="callout c-value">
+            <p class="callout-number">58%</p>
+            <p class="callout-label">of export dollars come from just three markets</p>
+          </div>
+          <p>Mainland China, the United Kingdom and the United States bring in 58% of export dollars. China alone brings in 33%. All three fell in 2026: China down 15% and the United States down 27% in value <span class="cite">(<a href="#ref-wa-2026c">Wine Australia, 2026c</a>)</span>. The tariffs from 2020 to 2024 already showed how much one market can hurt the whole industry.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Ending ===== -->
+    <section class="act wrap" id="ending">
+      <h2>What comes next</h2>
+      <div class="cols-2">
+        <p>Australia is growing fewer grapes and exporting fewer litres, but earning more for each litre it sells. The big inland regions still supply most of the grapes, while cool climate regions and Asian buyers drive the value. The risk is concentration: half the grapes come from one state, and a third of export dollars come from one market.</p>
+        <p>2026 was the fourth vintage in a row below the long term average, which Wine Australia sees as a reset to match weaker global demand <span class="cite">(<a href="#ref-wa-2026e">Wine Australia, 2026e</a>)</span>. There are bright spots: exports to Canada rose 20% to $188 million as American wine became harder to find there, and markets across Asia keep growing <span class="cite">(<a href="#ref-wa-2026c">Wine Australia, 2026c</a>)</span>. The industry's future looks smaller, but more valuable per litre.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <div class="cols-2">
+      <div>
+        <h2>Methodology</h2>
+    <ul>
+      <li>Grape crush figures are the estimated total crush from Wine Australia's National Vintage Report 2026 <span class="cite">(<a href="#ref-wa-2026d">Wine Australia, 2026d</a>)</span>. The Australian Capital Territory is counted within New South Wales.</li>
+      <li>Export years are financial years: 2026 means July 2025 to June 2026.</li>
+      <li>Average value per litre is the published export value divided by the published export volume for each market. Both figures are rounded, so where more precise figures were available on the export dashboard <span class="cite">(<a href="#ref-wa-2026b">Wine Australia, 2026b</a>)</span> (for example, Malaysia) these were used instead. Results may differ by a few cents from figures published by Wine Australia.</li>
+      <li>Export values are reported at the national level only, with no data below country level. Each market is plotted at a central point of the country, which represents the country as a whole, not a city where the wine was sold.</li>
+    </ul>
+      </div>
+      <div>
+        <h2>References</h2>
+        <ul class="references">
+          <li id="ref-abs-2026">Australian Bureau of Statistics. (2026). <i>Australian Statistical Geography Standard (ASGS) Edition 4: Digital boundary files</i> [Data set]. <a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs/edition-4-july-2026-june-2031/access-and-downloads/digital-boundary-files">https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs/edition-4-july-2026-june-2031/access-and-downloads/digital-boundary-files</a></li>
+          <li id="ref-efa-2024">Export Finance Australia. (2024, April). <i>Australia: Wine exports to recover slowly after China lifts tariffs</i>. <a href="https://www.exportfinance.gov.au/resources/world-risk-developments/2024/april/australia-wine-exports-to-recover-slowly-after-china-lifts-tariffs/">https://www.exportfinance.gov.au/resources/world-risk-developments/2024/april/australia-wine-exports-to-recover-slowly-after-china-lifts-tariffs/</a></li>
+          <li id="ref-ne">Natural Earth. (n.d.). <i>Admin 0: Countries</i> [Data set]. <a href="https://www.naturalearthdata.com/">https://www.naturalearthdata.com/</a></li>
+          <li id="ref-rba">Reserve Bank of Australia. (n.d.). <i>Exchange rates: Trade weighted index</i> [Data set]. <a href="https://www.rba.gov.au/statistics/tables/">https://www.rba.gov.au/statistics/tables/</a></li>
+          <li id="ref-wa-nd-a">Wine Australia. (n.d.-a). <i>Coonawarra</i>. <a href="https://www.wineaustralia.com/market-insights/regions-and-varieties/south-australia-wines/coonawarra">https://www.wineaustralia.com/market-insights/regions-and-varieties/south-australia-wines/coonawarra</a></li>
+          <li id="ref-wa-nd-b">Wine Australia. (n.d.-b). <i>Padthaway</i>. <a href="https://www.wineaustralia.com/market-insights/regions-and-varieties/south-australia-wines/padthaway">https://www.wineaustralia.com/market-insights/regions-and-varieties/south-australia-wines/padthaway</a></li>
+          <li id="ref-wa-nd-c">Wine Australia. (n.d.-c). <i>Riverina wine region</i>. Australian Wine. <a href="https://www.australianwine.com/our-places/new-south-wales/riverina-wine-region">https://www.australianwine.com/our-places/new-south-wales/riverina-wine-region</a></li>
+          <li id="ref-wa-2025">Wine Australia. (2025, January 29). <i>China drives increase in Australian wine export value while other markets decline</i> (Market Bulletin Issue 330). <a href="https://www.wineaustralia.com/news/market-bulletin/issue-330">https://www.wineaustralia.com/news/market-bulletin/issue-330</a></li>
+          <li id="ref-wa-2026a">Wine Australia. (2026a). <i>Australian exports decline as global wine consumption weakens</i> (Market Bulletin Issue 369). <a href="https://www.wineaustralia.com/news/market-bulletin/australian-exports-decline-as-global-wine-consumption-weakens">https://www.wineaustralia.com/news/market-bulletin/australian-exports-decline-as-global-wine-consumption-weakens</a></li>
+          <li id="ref-wa-2026b">Wine Australia. (2026b). <i>Australian wine export report</i> [Data set and report]. <a href="https://www.wineaustralia.com/market-insights/export-report">https://www.wineaustralia.com/market-insights/export-report</a></li>
+          <li id="ref-wa-2026c">Wine Australia. (2026c, July 29). <i>Australian wine exports decline in line with global wine consumption</i> [Press release]. <a href="https://www.wineaustralia.com/news/media-releases/export-report-june-2026">https://www.wineaustralia.com/news/media-releases/export-report-june-2026</a></li>
+          <li id="ref-wa-2026d">Wine Australia. (2026d). <i>National vintage report 2026</i> [Summary report]. <a href="https://www.wineaustralia.com/getmedia/416ecb9f-3c52-46b3-b069-fd12cc18d84e/MI_VintageReport2026_summary_F.pdf">https://www.wineaustralia.com/getmedia/416ecb9f-3c52-46b3-b069-fd12cc18d84e/MI_VintageReport2026_summary_F.pdf</a></li>
+          <li id="ref-wa-2026e">Wine Australia. (2026e, July 15). <i>Smallest vintage in more than 25 years reflects market pressures and seasonal conditions</i> [Press release]. <a href="https://www.wineaustralia.com/news/media-releases/national-vintage-report-2026">https://www.wineaustralia.com/news/media-releases/national-vintage-report-2026</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // One theme for all 11 charts. A spec's own "config" overrides this,
+    // so delete the config block from each spec to let this take over.
+    const theme = {
+      background: "transparent",
+      padding: { left: 0, top: 0, right: 5, bottom: 5 },   // chart edges line up with the text columns
+      font: "Urbanist, Helvetica Neue, Arial, sans-serif",
+      title: {
+        font: "Fraunces, Georgia, serif",
+        fontSize: 22, fontWeight: 600, color: "#232027",
+        anchor: "start", offset: 14,
+        subtitleFont: "Urbanist, Helvetica Neue, Arial, sans-serif",
+        subtitleFontSize: 15, subtitleColor: "#5d5964", subtitlePadding: 6
+      },
+      axis: {
+        titleFontSize: 13, titleFontWeight: 600, titleColor: "#232027",
+        labelFontSize: 12, labelColor: "#5d5964",
+        domainColor: "#bbbbbb", tickColor: "#bbbbbb", gridColor: "#e8e8e8"
+      },
+      legend: {
+        titleFontSize: 13, titleFontWeight: 600, titleColor: "#232027",
+        labelFontSize: 12, labelColor: "#3a3640",
+        labelLimit: 0, titleLimit: 0
+      },
+      text: { fontSize: 12, color: "#3a3640" },
+      view: { stroke: null }
+    };
+
+    const charts = {
+      chart1:  "js/chart1_waffle_chart.vl.json",
+      chart2:  "js/chart2_choropleth.vl.json",
+      chart3:  "js/chart3_waterfall.vl.json",
+      chart4:  "js/chart4_proportional_symbol.vl.json",
+      chart5:  "js/chart5_dumbbell.vl.json",
+      chart6:  "js/chart6_indexed_line.vl.json",
+      chart7:  "js/chart7_connected_scatter.vl.json",
+      chart8:  "js/chart8_flow.vl.json",
+      chart9:  "js/chart9_slope.vl.json",
+      chart10: "js/chart10_lollipop.vl.json",
+      chart11: "js/chart11_pareto.vl.json"
+    };
+
+    for (const [id, spec] of Object.entries(charts)) {
+      vegaEmbed("#" + id, spec, { actions: false, renderer: "svg", config: theme })
+        .catch(err => {
+          console.error(id, err);
+          document.getElementById(id).textContent = "Chart failed to load: " + spec;
+        });
+    }
+  </script>
+</body>
+</html>
