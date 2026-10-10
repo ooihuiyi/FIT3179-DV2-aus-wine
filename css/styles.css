@@ -1,0 +1,265 @@
+/* ===== Tokens =====
+   Charts are transparent and sit straight on the page.
+   The page is white so the light grey map land (#ebebeb)
+   and grey gridlines still read as shapes (figure) on the
+   page (ground). */
+:root {
+  --paper: #ffffff;
+  --ink: #232027;      /* headings, chart titles */
+  --body: #3a3640;     /* paragraphs */
+  --muted: #5d5964;    /* subtitles, captions */
+  --rule: #e2e0e5;
+
+  /* Same colours as the chart encodings, so coloured words act as a legend */
+  --crush: #330163;    /* grape crush, purple (charts 1, 3) */
+  --fall: #a63603;     /* fall in crush, orange (chart 2) */
+  --value: #c51b7d;    /* export dollars, magenta (charts 6, 8, 11) */
+  --volume: #01807a;   /* export litres, teal (charts 6, 8) */
+  --price: #8a6508;    /* price per litre, gold (charts 7, 10), darkened for text contrast */
+
+  --serif: "Fraunces", Georgia, serif;
+  --sans: "Urbanist", "Helvetica Neue", Arial, sans-serif;
+
+  --measure: 52ch;     /* about 60 characters per line */
+  --gap: clamp(1.5rem, 3vw, 2.5rem);
+  --gutter: clamp(1.5rem, 3vw, 3rem);   /* the one column gutter used everywhere */
+  --map-w: 850px;                       /* chart 4 map width = x where its legend starts */
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+/* ===== Type scale (page and charts share one scale)
+   h1 80 > h2 36 > lede 21 > chart title 22 > body 17
+   > chart subtitle 15 > legend/axis title 13 > labels 12 */
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--body);
+  font: 400 1.0625rem/1.65 var(--sans);
+  text-align: left;
+}
+
+.wrap {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 3vw, 2.5rem);
+}
+
+p { max-width: var(--measure); margin: 0 0 1em; }
+strong { color: var(--ink); font-weight: 700; }
+
+/* ===== Coloured key words (visual hierarchy through colour) ===== */
+.hl { font-weight: 700; }
+.hl-crush  { color: var(--crush); }
+.hl-fall   { color: var(--fall); }
+.hl-value  { color: var(--value); }
+.hl-volume { color: var(--volume); }
+.hl-price  { color: var(--price); }
+
+/* ===== Hero ===== */
+.hero { padding: clamp(3rem, 8vw, 6rem) 0 clamp(1rem, 2vw, 1.5rem); }
+
+.hero h1 {
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-size: clamp(2.5rem, 6.5vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  max-width: 20ch;
+  margin: 0 0 0.5em;
+}
+
+.lede { font-size: 1.3rem; line-height: 1.5; color: var(--ink); }
+
+/* Three key figures in one row across the full width.
+   space-between: first figure on the left edge, last figure ends on the
+   right edge, equal gaps between them. Text inside each stays left aligned. */
+.key-figures {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem 3rem;
+  margin: 2rem 0;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.key-figures div { display: flex; flex-direction: column; }
+.key-figures dd {
+  order: -1;                      /* number above its label */
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.1;
+}
+.key-figures dt {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-top: 0.35rem;
+  white-space: nowrap;            /* label on one line */
+}
+
+@media (max-width: 700px) {
+  .key-figures { flex-direction: column; }
+  .key-figures dt { white-space: normal; }
+}
+
+.byline { color: var(--muted); font-size: 0.95rem; }
+
+/* ===== Acts ===== */
+.act { padding-top: clamp(2.5rem, 5vw, 4rem); padding-bottom: clamp(1rem, 3vw, 2rem); }
+.act + .act { border-top: 1px solid var(--rule); }
+
+.act h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 3.5vw, 2.25rem);
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 0.6em;
+}
+
+/* ===== Charts: no panel, no background ===== */
+.viz {
+  margin: var(--gap) 0 calc(var(--gap) * 1.5);
+  overflow-x: auto;      /* wide charts scroll on phones, the page never does */
+  max-width: 100%;
+}
+
+/* Chart + text side by side, same idea as the teaching team's
+   pure-u-2-3 / pure-u-1-3 grid, written with CSS grid instead.
+   .split            chart 2/3 left, text 1/3 right
+   .split.text-left  text 1/3 left, chart 2/3 right */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+  gap: var(--gap) var(--gutter);
+  align-items: start;
+  margin: var(--gap) 0 calc(var(--gap) * 1.5);
+}
+.split.text-left { grid-template-columns: minmax(16rem, 1fr) minmax(0, 2fr); }
+.split .viz { margin: 0; }
+.split .note { padding-top: 5.5rem; }   /* starts level with the plot, below the chart title */
+.split .note p:last-child { margin-bottom: 0; }
+
+/* Full width chart (maps with legends beside them) */
+.viz-full { margin: var(--gap) 0 calc(var(--gap) * 1.5); }
+.viz-full .note { margin-bottom: 1rem; }
+
+/* A chart div that uses "width": "container" in its spec needs a width */
+.viz > div { width: 100%; }
+
+@media (max-width: 1100px) {
+  .split, .split.text-left { grid-template-columns: 1fr; }
+  .split .note { padding-top: 0; }
+}
+
+/* ===== Two column grids =====
+   .cols-2    two equal columns, used for a section intro AND the chart
+              pair under it, so text and charts share the same sight lines
+   .cols-map  left column = chart 4 map width, right column starts where
+              the map's legend starts
+   Each column flows on its own (align-items: start), so a short chart
+   is followed straight away by its paragraph. */
+.cols-2,
+.cols-map {
+  display: grid;
+  column-gap: var(--gutter);
+  row-gap: var(--gap);
+  align-items: start;
+}
+.cols-2   { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cols-map { grid-template-columns: var(--map-w) minmax(0, 1fr); column-gap: 0; }
+
+.intro { margin-bottom: var(--gap); }
+.intro p { margin: 0 0 1em; }
+.intro p:last-child { margin-bottom: 0; }
+
+/* A chart and its paragraph stacked in one column */
+.viz-col { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.viz-col .viz { margin: 0; }
+.viz-col .note p { margin: 0; }
+.viz-pair { margin: var(--gap) 0 calc(var(--gap) * 1.5); }
+
+/* Headline number: big serif figure, small label straight under it.
+   Colour matches the chart encoding it refers to. */
+.callout {
+  margin: 0 0 1.25rem;
+  padding-left: 1rem;
+  border-left: 3px solid currentColor;   /* figure ground: a coloured edge, no box */
+}
+.callout .callout-number {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);   /* below the 36px section heading in weight, above body text */
+  font-weight: 600;
+  line-height: 1.05;
+  margin: 0;
+}
+.callout .callout-label { color: var(--muted); font-size: 1rem; margin: 0.3rem 0 0; max-width: 40ch; }
+/* .callout p beats .intro p and .note p, so the label sits right under the number */
+.callout p { max-width: none; }
+
+.c-crush { color: var(--crush); }
+.c-fall  { color: var(--fall); }
+.c-value { color: var(--value); }
+.c-price { color: var(--price); }
+
+/* Right hand column pushed to the right page margin, so both outer
+   margins match. The callout above and the map below share one width,
+   so their left edges line up (sight line). */
+.col-end {
+  justify-self: end;
+  width: min(100%, var(--end-w, 560px));
+}
+
+@media (max-width: 1100px) {
+  .cols-2, .cols-map { grid-template-columns: 1fr; }
+  .col-end { justify-self: stretch; width: auto; }
+}
+
+/* Vega bindings (zoom slider, dropdowns, radio buttons) */
+.vega-bindings {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  color: var(--body);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 0.75rem;
+}
+.vega-bind-name { font-weight: 600; color: var(--ink); margin-right: 0.4rem; }
+.vega-bind label { cursor: pointer; }
+.vega-bind input[type="radio"] { margin: 0 0.3rem 0 1rem; vertical-align: middle; }
+.vega-bind input[type="radio"]:first-of-type { margin-left: 0.5rem; }
+.vega-bind input[type="range"] { accent-color: var(--ink); vertical-align: middle; }
+.vega-bind select { font: inherit; padding: 0.2rem 0.4rem; }
+.vega-bind input:focus-visible,
+.vega-bind select:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* ===== Footer ===== */
+footer {
+  margin-top: 2rem;
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+/* In-text citations: quieter than body text */
+.cite { color: var(--muted); font-size: 0.9em; white-space: nowrap; }
+.cite a { color: inherit; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 2px; }
+.cite a:hover { text-decoration-color: currentColor; }
+
+/* APA 7 reference list: hanging indent, no bullets */
+.references { list-style: none; padding-left: 0; }
+.references li { padding-left: 2em; text-indent: -2em; margin-bottom: 0.6rem; max-width: none; overflow-wrap: anywhere; }
+.references li:target { background: #f6f3fa; }
+
+footer h2 { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); margin: 0 0 0.5em; }
+footer ul { padding-left: 1.1rem; margin: 0 0 1.5rem; }
+footer li { margin-bottom: 0.4rem; max-width: var(--measure); }
+footer .cols-2 { margin-bottom: 1rem; }
