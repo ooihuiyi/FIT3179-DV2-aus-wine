@@ -23,7 +23,7 @@
   --measure: 52ch;     /* about 60 characters per line */
   --gap: clamp(1.5rem, 3vw, 2.5rem);
   --gutter: clamp(1.5rem, 3vw, 3rem);   /* the one column gutter used everywhere */
-  --map-w: 850px;                       /* chart 4 map width = x where its legend starts */
+  --map-w: 780px;                       /* chart 4 map width = x where its legend starts */
   color-scheme: light;
 }
 
