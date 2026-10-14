@@ -42,7 +42,7 @@
             "color": "#01807a",
             "offset": 6
           },
-          "width": 640,
+          "width": 560,
           "height": 300,
           "projection": {
             "type": "equalEarth",
@@ -54,6 +54,34 @@
           "layer": [
             {
               "data": {
+                "sphere": true
+              },
+              "mark": {
+                "type": "geoshape",
+                "fill": "#e3ecf3",
+                "stroke": null,
+                "clip": true
+              }
+            },
+            {
+              "data": {
+                "graticule": {
+                  "step": [
+                    30,
+                    30
+                  ]
+                }
+              },
+              "mark": {
+                "type": "geoshape",
+                "filled": false,
+                "stroke": "#cfdbe5",
+                "strokeWidth": 0.5,
+                "clip": true
+              }
+            },
+            {
+              "data": {
                 "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/js/world_countries.json",
                 "format": {
                   "type": "topojson",
@@ -62,9 +90,9 @@
               },
               "mark": {
                 "type": "geoshape",
-                "fill": "#ebebeb",
-                "stroke": "white",
-                "strokeWidth": 0.5,
+                "fill": "#f4f3f1",
+                "stroke": "#d9d9d9",
+                "strokeWidth": 0.4,
                 "clip": true
               }
             },
@@ -117,23 +145,23 @@
                   "as": "label_lines"
                 },
                 {
-                  "calculate": "{'United Kingdom': -20, 'United States': -95, 'China': 108.9, 'Canada': -103, 'New Zealand': 176, 'Japan': 143, 'Thailand': 62, 'Denmark': 20, 'Germany': 20, 'Belgium': 20}[datum.label]",
+                  "calculate": "{'United Kingdom': -30, 'United States': -100, 'China': 75, 'Canada': -108.5, 'New Zealand': 173, 'Japan': 145, 'Thailand': 50, 'Denmark': 30, 'Germany': 10, 'Belgium': -30}[datum.label]",
                   "as": "tx"
                 },
                 {
-                  "calculate": "{'United Kingdom': 73, 'United States': 39.8, 'China': 45, 'Canada': 61, 'New Zealand': -41.5, 'Japan': 37, 'Thailand': 10, 'Denmark': 36, 'Germany': 26, 'Belgium': 16}[datum.label]",
+                  "calculate": "{'United Kingdom': 78, 'United States': 40, 'China': 65, 'Canada': 60, 'New Zealand': -41.5, 'Japan': 78, 'Thailand': -12, 'Denmark': 33, 'Germany': 10, 'Belgium': 33}[datum.label]",
                   "as": "ty"
                 },
                 {
-                  "calculate": "{'United Kingdom': -4, 'United States': null, 'China': null, 'Canada': null, 'New Zealand': null, 'Japan': null, 'Thailand': 85, 'Denmark': 21, 'Germany': 21, 'Belgium': 21}[datum.label]",
+                  "calculate": "{'United Kingdom': -10, 'United States': null, 'China': 99, 'Canada': null, 'New Zealand': null, 'Japan': 180, 'Thailand': 80, 'Denmark': 61, 'Germany': 35, 'Belgium': 1}[datum.label]",
                   "as": "lx"
                 },
                 {
-                  "calculate": "{'United Kingdom': 64, 'United States': null, 'China': null, 'Canada': null, 'New Zealand': null, 'Japan': null, 'Thailand': 12, 'Denmark': 36, 'Germany': 26, 'Belgium': 16}[datum.label]",
+                  "calculate": "{'United Kingdom': 70, 'United States': null, 'China': 53, 'Canada': null, 'New Zealand': null, 'Japan': 60, 'Thailand': -12, 'Denmark': 33, 'Germany': 10, 'Belgium': 33}[datum.label]",
                   "as": "ly"
                 },
                 {
-                  "calculate": "{'United Kingdom': 'left', 'United States': 'left', 'China': 'center', 'Canada': 'left', 'New Zealand': 'left', 'Japan': 'left', 'Thailand': 'left', 'Denmark': 'left', 'Germany': 'left', 'Belgium': 'left'}[datum.label]",
+                  "calculate": "{'United Kingdom': 'left', 'United States': 'left', 'China': 'left', 'Canada': 'left', 'New Zealand': 'left', 'Japan': 'left', 'Thailand': 'left', 'Denmark': 'left', 'Germany': 'left', 'Belgium': 'left'}[datum.label]",
                   "as": "al"
                 },
                 {
@@ -776,15 +804,15 @@
                   },
                   {
                     "lab": "50 million litres",
-                    "px": 2.5799750402995163,
-                    "x0": 200,
-                    "x1": 240
+                    "px": 4.5799750402995163,
+                    "x0": 170,
+                    "x1": 210
                   },
                   {
                     "lab": "190 million litres",
                     "px": 8.403905153138162,
-                    "x0": 400,
-                    "x1": 440
+                    "x0": 340,
+                    "x1": 380
                   }
                 ]
               },
@@ -851,7 +879,7 @@
             "color": "#c51b7d",
             "offset": 6
           },
-          "width": 640,
+          "width": 560,
           "height": 300,
           "projection": {
             "type": "equalEarth",
@@ -863,6 +891,34 @@
           "layer": [
             {
               "data": {
+                "sphere": true
+              },
+              "mark": {
+                "type": "geoshape",
+                "fill": "#e3ecf3",
+                "stroke": null,
+                "clip": true
+              }
+            },
+            {
+              "data": {
+                "graticule": {
+                  "step": [
+                    30,
+                    30
+                  ]
+                }
+              },
+              "mark": {
+                "type": "geoshape",
+                "filled": false,
+                "stroke": "#cfdbe5",
+                "strokeWidth": 0.5,
+                "clip": true
+              }
+            },
+            {
+              "data": {
                 "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/js/world_countries.json",
                 "format": {
                   "type": "topojson",
@@ -871,9 +927,9 @@
               },
               "mark": {
                 "type": "geoshape",
-                "fill": "#ebebeb",
-                "stroke": "white",
-                "strokeWidth": 0.5,
+                "fill": "#f4f3f1",
+                "stroke": "#d9d9d9",
+                "strokeWidth": 0.4,
                 "clip": true
               }
             },
@@ -926,23 +982,23 @@
                   "as": "label_lines"
                 },
                 {
-                  "calculate": "{'China': 100, 'United Kingdom': -20, 'Singapore': 58, 'Hong Kong': 110, 'United States': -95, 'Canada': -103, 'New Zealand': 176, 'Japan': 143, 'Thailand': 74, 'Malaysia': 74}[datum.label]",
+                  "calculate": "{'China': 60, 'United Kingdom': -30, 'Singapore': 30, 'Hong Kong': 100, 'United States': -100, 'Canada': -110, 'New Zealand': 173, 'Japan': 165, 'Thailand': 30, 'Malaysia': 30}[datum.label]",
                   "as": "tx"
                 },
                 {
-                  "calculate": "{'China': 46, 'United Kingdom': 73, 'Singapore': -12, 'Hong Kong': 120, 'United States': 39.8, 'Canada': 61, 'New Zealand': -41.5, 'Japan': 37, 'Thailand': 20, 'Malaysia': 10}[datum.label]",
+                  "calculate": "{'China': 60, 'United Kingdom': 80, 'Singapore': -12, 'Hong Kong': 70, 'United States': 40, 'Canada': 60, 'New Zealand': -41.5, 'Japan': 75, 'Thailand': 35, 'Malaysia': 10}[datum.label]",
                   "as": "ty"
                 },
                 {
-                  "calculate": "{'China': null, 'United Kingdom': -4, 'Singapore': 82, 'Hong Kong': 133, 'United States': null, 'Canada': null, 'New Zealand': null, 'Japan': null, 'Thailand': 75, 'Malaysia': 75}[datum.label]",
+                  "calculate": "{'China': 90, 'United Kingdom': 3, 'Singapore': 70, 'Hong Kong': 140, 'United States': null, 'Canada': null, 'New Zealand': null, 'Japan': 185, 'Thailand': 78, 'Malaysia': 70}[datum.label]",
                   "as": "lx"
                 },
                 {
-                  "calculate": "{'China': null, 'United Kingdom': 64, 'Singapore': -8, 'Hong Kong': 125, 'United States': null, 'Canada': null, 'New Zealand': null, 'Japan': null, 'Thailand': 20, 'Malaysia': 10}[datum.label]",
+                  "calculate": "{'China': 50, 'United Kingdom': 70, 'Singapore': -15, 'Hong Kong': 60, 'United States': null, 'Canada': null, 'New Zealand': null, 'Japan': 60, 'Thailand': 28, 'Malaysia': 7}[datum.label]",
                   "as": "ly"
                 },
                 {
-                  "calculate": "{'China': 'center', 'United Kingdom': 'left', 'Singapore': 'left', 'Hong Kong': 'left', 'United States': 'left', 'Canada': 'left', 'New Zealand': 'left', 'Japan': 'left', 'Thailand': 'stackR', 'Malaysia': 'stackR'}[datum.label]",
+                  "calculate": "{'China': 'left', 'United Kingdom': 'left', 'Singapore': 'left', 'Hong Kong': 'left', 'United States': 'left', 'Canada': 'left', 'New Zealand': 'left', 'Japan': 'left', 'Thailand': 'left', 'Malaysia': 'left'}[datum.label]",
                   "as": "al"
                 },
                 {
@@ -1378,7 +1434,8 @@
                     "stroke": "white",
                     "strokeWidth": 3,
                     "strokeJoin": "round",
-                    "color": "white"
+                    "color": "white",
+                    "lineHeight": 13
                   },
                   "encoding": {
                     "longitude": {
@@ -1417,7 +1474,8 @@
                     "baseline": "middle",
                     "align": "right",
                     "dx": -3,
-                    "color": "#222"
+                    "color": "#222",
+                    "lineHeight": 13
                   },
                   "encoding": {
                     "longitude": {
@@ -1584,14 +1642,14 @@
                   {
                     "lab": "$250 million",
                     "px": 3.1453626792233216,
-                    "x0": 200,
-                    "x1": 240
+                    "x0": 170,
+                    "x1": 210
                   },
                   {
                     "lab": "$750 million",
                     "px": 8.436088037669965,
-                    "x0": 400,
-                    "x1": 440
+                    "x0": 340,
+                    "x1": 380
                   }
                 ]
               },
@@ -1649,7 +1707,7 @@
           ]
         }
       ],
-      "spacing": 48
+      "spacing": 40
     },
     {
       "width": 640,
