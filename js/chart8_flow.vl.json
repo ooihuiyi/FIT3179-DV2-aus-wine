@@ -9,7 +9,7 @@
     "subtitle": [
       "Top 10 markets by litres (left) and dollars (right).",
       "Year to June 2026. Wider line = more.",
-      "Lines run between country centres."
+      "Each line runs from Australia to a market."
     ]
   },
   "params": [
@@ -798,7 +798,7 @@
                 "values": [
                   {
                     "lab": "10 million litres",
-                    "px": 0.9159950080599033,
+                    "px": 1.0290725358446644,
                     "x0": 0,
                     "x1": 40
                   },
@@ -1641,7 +1641,7 @@
                   },
                   {
                     "lab": "$250 million",
-                    "px": 3.1453626792233216,
+                    "px": 4.5799750402995163,
                     "x0": 170,
                     "x1": 210
                   },
