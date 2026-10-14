@@ -35,11 +35,10 @@
   </header>
 
   <main>
-    <!-- ===== Act 1: the crush by state ===== -->
+    <!-- Act 1: the crush by state-->
     <section class="act wrap" id="states">
       <h2>Where the grapes are grown</h2>
 
-      <!-- intro uses the same 2 columns as the charts below -->
       <div class="cols-2 intro">
         <p><span class="hl hl-crush">South Australia crushes over half</span> of the country's wine grapes, and every state <span class="hl hl-fall">crushed less</span> in 2026. The total crush is now 25% below the ten year average. Flooding hit the inland regions, but Wine Australia says the main cause was a deliberate cut in production as demand for wine weakened <span class="cite">(<a href="#ref-wa-2026e">Wine Australia, 2026e</a>)</span>.</p>
         <div class="callout c-crush col-end">
@@ -59,7 +58,6 @@
         </div>
       </div>
 
-      <!-- chart 2/3, text 1/3 -->
       <div class="split">
         <figure class="viz"><div id="chart3"></div></figure>
         <div class="note">
@@ -71,7 +69,7 @@
       </div>
     </section>
 
-    <!-- ===== Act 2: regions ===== -->
+    <!-- Act 2: regions -->
     <section class="act wrap" id="regions">
       <h2>Region by region</h2>
 
@@ -93,7 +91,7 @@
       </div>
     </section>
 
-    <!-- ===== Act 3: exports over time ===== -->
+    <!-- Act 3: exports over time -->
     <section class="act wrap" id="exports">
       <h2>Less wine, more money</h2>
       <div class="cols-2 intro">
@@ -116,7 +114,7 @@
       </div>
     </section>
 
-    <!-- ===== Act 4: markets ===== -->
+    <!-- Act 4: markets -->
     <section class="act wrap" id="markets">
       <h2>Where the wine goes</h2>
       <div class="cols-2 intro">
@@ -131,7 +129,6 @@
         <figure class="viz"><div id="chart8"></div></figure>
       </div>
 
-      <!-- half + half, text under each chart -->
       <div class="cols-2 viz-pair">
         <div class="viz-col">
           <figure class="viz"><div id="chart9"></div></figure>
@@ -154,7 +151,6 @@
       </div>
     </section>
 
-    <!-- ===== Ending ===== -->
     <section class="act wrap" id="ending">
       <h2>What comes next</h2>
       <div class="cols-2">
@@ -197,8 +193,6 @@
   </footer>
 
   <script>
-    // One theme for all 11 charts. A spec's own "config" overrides this,
-    // so delete the config block from each spec to let this take over.
     const theme = {
       background: "transparent",
       padding: { left: 0, top: 0, right: 5, bottom: 5 },   // chart edges line up with the text columns
@@ -238,12 +232,66 @@
       chart11: "js/chart11_pareto.vl.json"
     };
 
-    for (const [id, spec] of Object.entries(charts)) {
-      vegaEmbed("#" + id, spec, { actions: false, renderer: "svg", config: theme })
+    // Chart 4
+    async function fitRegionMap(url) {
+      const spec = await (await fetch(url)).json();
+      const el = document.getElementById("chart4");
+      const legendCol = 380;                       
+      const w = Math.min(1000, Math.max(700, el.clientWidth - legendCol));
+
+      (function walk(o) {
+        if (Array.isArray(o)) { o.forEach(walk); return; }
+        if (!o || typeof o !== "object") return;
+        for (const k of Object.keys(o)) {
+          const v = o[k];
+          if (k === "width" && v === 760) o[k] = w;                   
+          else if ((k === "legendX" || k === "x") && v === 780) o[k] = w + 20; 
+          else if (k === "translate" && Array.isArray(v) && v[0] === 380) v[0] = w / 2; 
+          else walk(v);
+        }
+      })(spec);
+
+      document.documentElement.style.setProperty("--map-w", (w + 20) + "px");
+      return spec;
+    }
+
+    // Chart 8
+    async function fitFlowMaps(url) {
+      const spec = await (await fetch(url)).json();
+      const el = document.getElementById("chart8");
+      const gap = spec.vconcat[0].spacing || 40; 
+      const spare = 20;                            
+      const w = Math.min(680, Math.max(520, Math.floor((el.clientWidth - gap - spare) / 2)));
+      const h = Math.round(w * 300 / 560);         
+
+      spec.vconcat[0].hconcat.forEach(panel => {
+        panel.width = w;
+        panel.height = h;
+
+        const legend = panel.layer[5];
+        legend.layer.forEach(l => { l.encoding.y.value = h - 8; });
+
+        const start = Math.round(w * 0.15);
+        const step = Math.min(170, Math.floor((w - start - 160) / 2));
+        legend.data.values.forEach((v, i) => {
+          v.x0 = start + i * step;
+          v.x1 = v.x0 + 40;
+        });
+      });
+      return spec;
+    }
+
+    for (const [id, url] of Object.entries(charts)) {
+      const spec =
+        id === "chart8" ? fitFlowMaps(url) :
+        id === "chart4" ? fitRegionMap(url) :
+        Promise.resolve(url);
+      spec
+        .then(s => vegaEmbed("#" + id, s, { actions: false, renderer: "svg", config: theme }))
         .catch(err => {
           console.error(id, err);
-          document.getElementById(id).textContent = "Chart failed to load: " + spec;
-        });
+          document.getElementById(id).textContent = "Chart failed to load: " + url;
+      });
     }
   </script>
 </body>
