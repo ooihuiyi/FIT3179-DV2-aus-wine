@@ -61,7 +61,7 @@
   ],
   "vconcat": [
     {
-      "width": 830,
+      "width": 760,
       "height": 500,
       "projection": {
         "type": "conicEqualArea",
@@ -77,7 +77,7 @@
           "expr": "zoom_level"
         },
         "translate": [
-          415,
+          380,
           250
         ],
         "center": {
@@ -205,7 +205,7 @@
                 "lon": 139,
                 "lat": -32.5,
                 "text": [
-                  "71% of the national crush,",
+                  "62% of the national crush,",
                   "but under $370 a tonne (national average $570)"
                 ]
               }
@@ -293,7 +293,7 @@
                     "symbolStrokeColor": "#555",
                     "orient": "none",
                     "direction": "horizontal",
-                    "legendX": 850,
+                    "legendX": 780,
                     "legendY": 80,
                     "columnPadding": 10,
                     "labelOffset": 4
@@ -302,7 +302,7 @@
                 "color": {
                   "field": "value_per_tonne",
                   "type": "quantitative",
-                  "title": "Average grape price ($ per tonne, log scale)",
+                  "title": "Grape price ($ per tonne, log scale)",
                   "scale": {
                     "type": "log",
                     "range": [
@@ -320,7 +320,7 @@
                       1000,
                       3870
                     ],
-                    "legendX": 850,
+                    "legendX": 780,
                     "legendY": 0
                   }
                 },
@@ -581,7 +581,7 @@
             "type": "text",
             "align": "left",
             "baseline": "top",
-            "x": 850,
+            "x": 780,
             "y": 190,
             "fontSize": 13,
             "fontWeight": 600,
@@ -610,7 +610,7 @@
             "type": "text",
             "align": "left",
             "baseline": "top",
-            "x": 850,
+            "x": 780,
             "y": 212,
             "fontSize": 12,
             "lineHeight": 18,
@@ -625,7 +625,7 @@
       ]
     },
     {
-      "width": 830,
+      "width": 760,
       "height": 14,
       "data": {
         "values": [

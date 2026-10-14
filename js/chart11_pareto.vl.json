@@ -827,7 +827,7 @@
         "text": {
           "value": [
             "2nd by value, but among",
-            "the lowest per litre (chart 10)"
+            "the lowest per litre"
           ]
         }
       }
@@ -941,7 +941,7 @@
           "filter": "datum.market == 'Malaysia'"
         },
         {
-          "calculate": "['Highest price per litre,', 'yet ' + format(datum.share, '.0f') + '% of value (chart 10)']",
+          "calculate": "['Highest price per litre,', 'yet ' + format(datum.share, '.0f') + '% of value']",
           "as": "t"
         }
       ],

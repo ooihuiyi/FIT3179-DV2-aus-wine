@@ -121,8 +121,8 @@
               "2026"
             ],
             "range": [
-              "#dfc27d",
-              "#8c510a"
+              "#b7aed6",
+              "#330163"
             ]
           },
           "legend": null
@@ -280,9 +280,9 @@
         "color": {
           "condition": {
             "test": "datum.year == '2025'",
-            "value": "#b08a2e"
+            "value": "#7363a6"
           },
-          "value": "#8c510a"
+          "value": "#330163"
         }
       }
     },

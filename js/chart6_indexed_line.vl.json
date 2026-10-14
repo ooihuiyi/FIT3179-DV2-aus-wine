@@ -80,7 +80,7 @@
         "values": [
           {
             "start": 2021,
-            "end": 2023
+            "end": 2024
           }
         ]
       },
@@ -111,8 +111,9 @@
           {
             "x": 2021.08,
             "t": [
-              "China tariffs",
-              "began in 2021.",
+              "China tariffs,",
+              "late 2020 to",
+              "March 2024.",
               "Export value",
               "fell 27% from",
               "2021 to 2023."
