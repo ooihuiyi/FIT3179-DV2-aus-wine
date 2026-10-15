@@ -74,7 +74,7 @@
       <h2>Region by region</h2>
 
       <!-- right column starts where the map legend starts -->
-      <div class="cols-map intro">
+      <div class="cols-2 intro">
         <p>Australia's wine grapes come from two very different kinds of region. <span class="hl hl-crush">Warm inland regions</span> grow huge volumes cheaply, while cool climate regions grow far less but earn much more per tonne. Even with fewer grapes in 2026, the average grape price fell 6% to $570 a tonne, a sign that demand is still weak <span class="cite">(<a href="#ref-wa-2026e">Wine Australia, 2026e</a>)</span>.</p>
         <p>The Riverina in New South Wales is typical of the inland trio: flat plains with a mean temperature of 25.8°C and only 229 millimetres of rain in the growing season <span class="cite">(<a href="#ref-wa-nd-c">Wine Australia, n.d.-c</a>)</span>. It crushed 204,506 tonnes in 2026 but earned just $338 a tonne. Zoom in near Adelaide to separate the smaller regions, or jump to Tasmania, which earns the most per tonne. Try it on the map below.</p>
       </div>
@@ -192,7 +192,7 @@
     </div>
   </footer>
 
-  <script>
+    <script>
     const theme = {
       background: "transparent",
       padding: { left: 0, top: 0, right: 5, bottom: 5 },   // chart edges line up with the text columns
@@ -232,42 +232,50 @@
       chart11: "js/chart11_pareto.vl.json"
     };
 
-    // Chart 4
+    // Width of a section's content area (its width minus side padding)
+    function contentWidth(sectionId) {
+      const sec = document.getElementById(sectionId);
+      const cs = getComputedStyle(sec);
+      return sec.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    }
+
+    // Chart 4: region map fills the width, legends sit in a column on its right
     async function fitRegionMap(url) {
       const spec = await (await fetch(url)).json();
-      const el = document.getElementById("chart4");
-      const legendCol = 380;                       
-      const w = Math.min(1000, Math.max(700, el.clientWidth - legendCol));
+      const avail = contentWidth("regions");
+      const legendCol = 380;                     // room for the legends and "How to read" text
+      const w = Math.min(1000, Math.max(700, avail - legendCol));
 
+      // swap the fixed numbers in the spec for the new ones
       (function walk(o) {
         if (Array.isArray(o)) { o.forEach(walk); return; }
         if (!o || typeof o !== "object") return;
         for (const k of Object.keys(o)) {
           const v = o[k];
-          if (k === "width" && v === 760) o[k] = w;                   
-          else if ((k === "legendX" || k === "x") && v === 780) o[k] = w + 20; 
-          else if (k === "translate" && Array.isArray(v) && v[0] === 380) v[0] = w / 2; 
+          if (k === "width" && v === 760) o[k] = w;                                        // map and source row
+          else if ((k === "legendX" || k === "x") && v === 780) o[k] = w + 20;             // legends and text
+          else if (k === "translate" && Array.isArray(v) && v[0] === 380) v[0] = w / 2;    // keep map centred
           else walk(v);
         }
       })(spec);
 
-      document.documentElement.style.setProperty("--map-w", (w + 20) + "px");
       return spec;
     }
 
-    // Chart 8
+    // Chart 8: the two flow maps share the width equally
     async function fitFlowMaps(url) {
       const spec = await (await fetch(url)).json();
-      const el = document.getElementById("chart8");
-      const gap = spec.vconcat[0].spacing || 40; 
-      const spare = 20;                            
-      const w = Math.min(680, Math.max(520, Math.floor((el.clientWidth - gap - spare) / 2)));
-      const h = Math.round(w * 300 / 560);         
+      const avail = contentWidth("markets");
+      const gap = spec.vconcat[0].spacing || 40;  // space between the two maps
+      const spare = 20;                           // room for theme padding and edge labels
+      const w = Math.min(680, Math.max(520, Math.floor((avail - gap - spare) / 2)));
+      const h = Math.round(w * 300 / 560);        // keep the original shape
 
       spec.vconcat[0].hconcat.forEach(panel => {
         panel.width = w;
         panel.height = h;
 
+        // size legend: bottom of the map, starting where the globe's bottom edge begins
         const legend = panel.layer[5];
         legend.layer.forEach(l => { l.encoding.y.value = h - 8; });
 
@@ -281,18 +289,28 @@
       return spec;
     }
 
-    for (const [id, url] of Object.entries(charts)) {
-      const spec =
-        id === "chart8" ? fitFlowMaps(url) :
-        id === "chart4" ? fitRegionMap(url) :
-        Promise.resolve(url);
-      spec
-        .then(s => vegaEmbed("#" + id, s, { actions: false, renderer: "svg", config: theme }))
-        .catch(err => {
-          console.error(id, err);
-          document.getElementById(id).textContent = "Chart failed to load: " + url;
-      });
+    // Charts that need resizing before they are drawn
+    const fitters = { chart4: fitRegionMap, chart8: fitFlowMaps };
+
+    function draw(id) {
+      const url = charts[id];
+      const spec = fitters[id] ? fitters[id](url) : Promise.resolve(url);
+      return spec
+          .then(s => vegaEmbed("#" + id, s, {
+          actions: { export: true, source: true, compiled: false, editor: true },
+          renderer: "svg",
+          config: theme
+        }))
     }
+
+    Object.keys(charts).forEach(draw);
+
+    // Redraw the two resizable maps when the window size changes
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => Object.keys(fitters).forEach(draw), 250);
+    });
   </script>
 </body>
 </html>
