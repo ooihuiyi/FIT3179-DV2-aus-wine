@@ -97,7 +97,7 @@
         "type": "square",
         "size": 800,
         "opacity": 1,
-        "stroke": "#b9b3dc",
+        "stroke": "white",
         "strokeWidth": 0.6
       },
       "encoding": {
@@ -120,17 +120,17 @@
           "title": "State",
           "scale": {
             "range": [
-              "#330163",
-              "#7363a6",
-              "#b7aed6",
-              "#ebe8f5"
+              "#542788",
+              "#8c510a",
+              "#9aa83a",
+              "#bbbbbb"
             ]
           },
           "legend": {
             "orient": "right",
             "symbolType": "square",
             "symbolSize": 200,
-            "symbolStrokeColor": "#b9b3dc",
+            "symbolStrokeColor": "white",
             "symbolStrokeWidth": 0.6,
             "labelLimit": 0,
             "rowPadding": 8
