@@ -41,7 +41,7 @@
     {
       "mark": {
         "type": "line",
-        "color": "#c8c8c8",
+        "color": "#e0e0e0",
         "strokeWidth": 2.5
       },
       "encoding": {
@@ -122,8 +122,8 @@
               "2026"
             ],
             "range": [
-              "#b7aed6",
-              "#330163"
+              "#a8a8a8",
+              "#232027"
             ]
           },
           "legend": null
@@ -281,9 +281,9 @@
         "color": {
           "condition": {
             "test": "datum.year == '2025'",
-            "value": "#7363a6"
+            "value": "#8a8a8a"
           },
-          "value": "#330163"
+          "value": "#232027"
         }
       }
     },
