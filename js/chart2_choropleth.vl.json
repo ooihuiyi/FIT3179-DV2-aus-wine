@@ -4,7 +4,8 @@
     "text": "Tasmania's crush fell hardest, down 40%",
     "subtitle": "Fall in grape crush by state, 2025 to 2026 vintage."
   },
-  "width": 560,
+  "width": "container",
+  "autosize": { "type": "fit-x", "contains": "padding" },
   "height": 470,
   "projection": {
     "type": "conicEqualArea",
@@ -152,7 +153,8 @@
             "lon": 148.7,
             "lat": -42.3,
             "t": [
-              "Tasmania: 18,845 to",
+              "Tasmania:",
+              "18,845 to",
               "11,219 tonnes"
             ]
           },
