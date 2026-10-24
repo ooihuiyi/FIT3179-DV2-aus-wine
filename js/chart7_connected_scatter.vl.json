@@ -483,7 +483,8 @@
           {
             "t": [
               "Sources: Wine Australia, Export Report, wineaustralia.com;",
-              "Reserve Bank of Australia, trade-weighted index, rba.gov.au/statistics/tables",
+              "Reserve Bank of Australia, trade-weighted index,", 
+              "rba.gov.au/statistics/tables",
               "2026 means July 2025 to June 2026."
             ]
           }
