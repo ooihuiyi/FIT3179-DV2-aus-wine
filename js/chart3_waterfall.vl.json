@@ -9,7 +9,8 @@
     "subtitle": [
       "Tonnes of grapes lost by state, 2025 to 2026 vintage.",
       "Each bar starts where the previous state's ends.",
-      "Bar colours match each state in the waffle chart."
+      "Bar colours match each state in the waffle chart.",
+      "Other states: Western Australia, Tasmania and Queensland."
     ]
   },
   "width": "container",
@@ -18,6 +19,16 @@
     "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/data/crush_by_state.csv"
   },
   "transform": [
+    {
+      "calculate": "indexof(['South Australia', 'New South Wales', 'Victoria'], datum.state_name) >= 0 ? datum.state_name : 'Other states'",
+      "as": "state_name"
+    },
+    {
+      "aggregate": [
+        { "op": "sum", "field": "crush_2025_tonnes", "as": "crush_2025_tonnes" },
+        { "op": "sum", "field": "crush_2026_tonnes", "as": "crush_2026_tonnes" }
+      ], "groupby": ["state_name"]
+    },
     {
       "calculate": "datum.crush_2025_tonnes - datum.crush_2026_tonnes",
       "as": "lost"
@@ -144,14 +155,14 @@
           "as": "label"
         },
         {
-          "calculate": "indexof(['South Australia', 'New South Wales', 'Victoria'], datum.state_name) >= 0 ? datum.state_name : 'WA, Tas and Qld'",
+          "calculate": "indexof(['South Australia', 'New South Wales', 'Victoria'], datum.state_name) >= 0 ? datum.state_name : 'Other states'",
           "as": "group"
         }
       ],
       "mark": {
         "type": "bar",
         "height": 22,
-        "stroke": "#b9b3dc",
+        "stroke": "white",
         "strokeWidth": 0.6
       },
       "encoding": {
@@ -164,7 +175,8 @@
             "grid": true,
             "gridColor": "#ececec",
             "labelExpr": "format(datum.value, ',.0f')",
-            "format": ",.0f"
+            "format": ",.0f",
+            "values": [0, 50000, 100000, 150000, 200000, 250000, 300000]
           }
         },
         "x2": {
@@ -178,13 +190,13 @@
               "South Australia",
               "New South Wales",
               "Victoria",
-              "WA, Tas and Qld"
+              "Other states"
             ],
             "range": [
-              "#330163",
-              "#7e609c",
-              "#b7aed6",
-              "#ebe8f5"
+              "#542788",
+              "#8c510a",
+              "#9aa83a",
+              "#bbbbbb"
             ]
           },
           "legend": null
@@ -332,7 +344,7 @@
       "mark": {
         "type": "bar",
         "height": 22,
-        "color": "#8a8a8a"
+        "color": "#636262"
       },
       "encoding": {
         "x": {
