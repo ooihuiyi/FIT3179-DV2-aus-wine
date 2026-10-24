@@ -8,7 +8,8 @@
     ],
     "subtitle": [
       "Grape crush by wine region, 2025 and 2026 vintage.",
-      "Log scale: equal gaps mean equal percentage falls."
+      "Log scale: equal gaps mean equal percentage falls.",
+      "Labels show each region's fall from 2025 to 2026."
     ]
   },
   "width": "container",
@@ -188,7 +189,7 @@
           "filter": "datum.year == '2025'"
         },
         {
-          "calculate": "datum.fall < 1 ? 'under 1%' : format(datum.fall, '.0f') + '%'",
+          "calculate": "datum.fall < 1 ? 'under 1%' : '−' + format(datum.fall, '.0f') + '%'",
           "as": "fall_text"
         }
       ],
