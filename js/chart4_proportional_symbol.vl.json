@@ -33,6 +33,10 @@
         "input": "select",
         "options": [
           [
+            136,
+            -36
+          ],
+          [
             142.6,
             -35.2
           ],
@@ -43,17 +47,13 @@
           [
             146.8,
             -42
-          ],
-          [
-            134,
-            -29.5
           ]
         ],
         "labels": [
-          "South east",
+          "All wine regions",
+          "South East",
           "Margaret River",
-          "Tasmania",
-          "All of Australia"
+          "Tasmania"
         ],
         "name": "Map centre: "
       }
