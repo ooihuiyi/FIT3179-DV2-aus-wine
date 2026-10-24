@@ -14,7 +14,7 @@
   "params": [
     {
       "name": "zoom_level",
-      "value": 3000,
+      "value": 1400,
       "bind": {
         "input": "range",
         "min": 800,
@@ -26,8 +26,8 @@
     {
       "name": "center_to",
       "value": [
-        142.6,
-        -35.2
+        136,
+        -36
       ],
       "bind": {
         "input": "select",
@@ -250,7 +250,7 @@
                     "fields": [
                       "region"
                     ],
-                    "on": "pointerover",
+                    "on": "pointerover[event.item && event.item.datum && isValid(event.item.datum.region)]",
                     "clear": "pointerout"
                   }
                 }
