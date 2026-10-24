@@ -25,7 +25,7 @@
       <p class="lede">Australia crushed 306,334 fewer tonnes of wine grapes in 2026, a fall of 19%. Yet each litre of wine sent overseas now earns 47% more than in 2015. This is the story of a shrinking harvest and a more valuable product.</p>
 
       <dl class="key-figures">
-        <div><dt>Grapes lost, 2025 to 2026</dt><dd class="c-crush">306,334 tonnes</dd></div>
+        <div><dt>Grapes lost, 2025 to 2026</dt><dd class="c-ink">306,334 tonnes</dd></div>
         <div><dt>South Australia's share of the crush</dt><dd class="c-crush">52%</dd></div>
         <div><dt>Export price per litre since 2015</dt><dd class="c-price">+47%</dd></div>
       </dl>
@@ -41,7 +41,7 @@
 
       <div class="cols-2 intro">
         <p><span class="hl hl-crush">South Australia crushes over half</span> of the country's wine grapes, and every state <span class="hl hl-fall">crushed less</span> in 2026. The total crush is now 25% below the ten year average. Flooding hit the inland regions, but Wine Australia says the main cause was a deliberate cut in production as demand for wine weakened <span class="cite">(<a href="#ref-wa-2026e">Wine Australia, 2026e</a>)</span>.</p>
-        <div class="callout c-crush col-end">
+        <div class="callout c-ink col-end">
           <p class="callout-number">1.27 million tonnes</p>
           <p class="callout-label">The smallest national crush since 2000 <span class="cite">(<a href="#ref-wa-2026e">Wine Australia, 2026e</a>)</span></p>
         </div>
@@ -75,7 +75,7 @@
 
       <!-- right column starts where the map legend starts -->
       <div class="cols-2 intro">
-        <p>Australia's wine grapes come from two very different kinds of region. <span class="hl hl-crush">Warm inland regions</span> grow huge volumes cheaply, while cool climate regions grow far less but earn much more per tonne. Even with fewer grapes in 2026, the average grape price fell 6% to $570 a tonne, a sign that demand is still weak <span class="cite">(<a href="#ref-wa-2026e">Wine Australia, 2026e</a>)</span>.</p>
+        <p>Australia's wine grapes come from two very different kinds of region. <strong>Warm inland regions</strong> grow huge volumes cheaply, while cool climate regions grow far less but earn much more per tonne. Even with fewer grapes in 2026, the average grape price fell 6% to $570 a tonne, a sign that demand is still weak <span class="cite">(<a href="#ref-wa-2026e">Wine Australia, 2026e</a>)</span>.</p>
         <p>The Riverina in New South Wales is typical of the inland trio: flat plains with a mean temperature of 25.8°C and only 229 millimetres of rain in the growing season <span class="cite">(<a href="#ref-wa-nd-c">Wine Australia, n.d.-c</a>)</span>. It crushed 204,506 tonnes in 2026 but earned just $338 a tonne. Zoom in near Adelaide to separate the smaller regions, or jump to Tasmania, which earns the most per tonne. Try it on the map below.</p>
       </div>
 
@@ -94,7 +94,7 @@
     <!-- Act 3: exports over time -->
     <section class="act wrap" id="exports">
       <h2>Less wine, more money</h2>
-      <div class="cols-2 intro">
+      <div class="split intro">
         <p>Since 2015, export <span class="hl hl-volume">litres fell 17%</span> while export <span class="hl hl-value">dollars rose 21%</span>. Australia is selling less wine overseas, but each litre is worth more.</p>
         <div class="callout c-price">
           <p class="callout-number">$3.84 a litre</p>
@@ -243,7 +243,7 @@
     async function fitRegionMap(url) {
       const spec = await (await fetch(url)).json();
       const avail = contentWidth("regions");
-      const legendCol = 380;                     // room for the legends and "How to read" text
+      const legendCol = 320;                     // room for the legends and "How to read" text
       const w = Math.min(1000, Math.max(700, avail - legendCol));
 
       // swap the fixed numbers in the spec for the new ones

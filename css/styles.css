@@ -11,7 +11,7 @@
   --rule: #e2e0e5;
 
   /* Same colours as the chart encodings, so coloured words act as a legend */
-  --crush: #330163;    /* grape crush, purple (charts 1, 3) */
+  --crush: #542788;    /* grape crush, purple (charts 1, 3) */
   --fall: #a63603;     /* fall in crush, orange (chart 2) */
   --value: #c51b7d;    /* export dollars, magenta (charts 6, 8, 11) */
   --volume: #01807a;   /* export litres, teal (charts 6, 8) */
@@ -20,7 +20,7 @@
   --serif: "Fraunces", Georgia, serif;
   --sans: "Urbanist", "Helvetica Neue", Arial, sans-serif;
 
-  --measure: 52ch;     /* about 60 characters per line */
+  --measure: 40ch;     /* about 60 characters per line */
   --gap: clamp(1.5rem, 3vw, 2.5rem);
   --gutter: clamp(1.5rem, 3vw, 3rem);   /* the one column gutter used everywhere */
   --map-w: 780px;                       /* chart 4 map width = x where its legend starts */
@@ -36,7 +36,7 @@ body {
   margin: 0;
   background: var(--paper);
   color: var(--body);
-  font: 400 1.0625rem/1.65 var(--sans);
+  font: 400 1.25rem/1.65 var(--sans);
   text-align: left;
 }
 
@@ -207,6 +207,7 @@ strong { color: var(--ink); font-weight: 700; }
 .c-fall  { color: var(--fall); }
 .c-value { color: var(--value); }
 .c-price { color: var(--price); }
+.c-ink   { color: var(--ink); }
 
 /* Right hand column pushed to the right page margin, so both outer
    margins match. The callout above and the map below share one width,
