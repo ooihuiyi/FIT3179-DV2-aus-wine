@@ -1,8 +1,3 @@
-/* ===== Tokens =====
-   Charts are transparent and sit straight on the page.
-   The page is white so the light grey map land (#ebebeb)
-   and grey gridlines still read as shapes (figure) on the
-   page (ground). */
 :root {
   --paper: #ffffff;
   --ink: #232027;      /* headings, chart titles */
@@ -264,3 +259,13 @@ footer h2 { font-family: var(--serif); font-size: 1.25rem; color: var(--ink); ma
 footer ul { padding-left: 1.1rem; margin: 0 0 1.5rem; }
 footer li { margin-bottom: 0.4rem; max-width: var(--measure); }
 footer .cols-2 { margin-bottom: 1rem; }
+
+/* plain emphasis */
+main p strong {
+  font-weight: 650;
+  color: #232027;
+}
+
+.hl {
+  font-weight: 600;
+}
