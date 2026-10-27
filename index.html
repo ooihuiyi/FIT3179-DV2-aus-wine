@@ -34,6 +34,16 @@
     </div>
   </header>
 
+  <nav class="section-nav" aria-label="Sections">
+    <div class="wrap">
+      <a href="#states">Grapes by state</a>
+      <a href="#regions">Regions</a>
+      <a href="#exports">Exports over time</a>
+      <a href="#markets">Markets</a>
+      <a href="#ending">What comes next</a>
+    </div>
+  </nav>
+
   <main>
     <!-- Act 1: the crush by state-->
     <section class="act wrap" id="states">
@@ -311,6 +321,17 @@
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => Object.keys(fitters).forEach(draw), 250);
     });
+
+  const navLinks = document.querySelectorAll(".section-nav a");
+  const navObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      navLinks.forEach(a =>
+        a.classList.toggle("active", a.getAttribute("href") === "#" + entry.target.id));
+    });
+  }, { rootMargin: "-40% 0px -55% 0px" });
+
+  document.querySelectorAll("main section[id]").forEach(s => navObserver.observe(s));
   </script>
 </body>
 </html>

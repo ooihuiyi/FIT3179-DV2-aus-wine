@@ -269,3 +269,43 @@ main p strong {
 .hl {
   font-weight: 600;
 }
+
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+}
+.section-nav .wrap {
+  display: flex;
+  gap: 1.75rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.section-nav a {
+  position: relative;
+  padding: 0.9rem 0;          
+  font-family: "Urbanist", "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600; 
+  color: #8a8690;           
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.section-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;           
+  height: 3px;
+  background: #232027;
+  transform: scaleX(0);
+  transition: transform 0.25s;
+}
+.section-nav a:hover { color: #232027; }
+.section-nav a.active { color: #232027; }
+.section-nav a.active::after { transform: scaleX(1); }
