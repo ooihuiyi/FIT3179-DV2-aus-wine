@@ -14,7 +14,7 @@
   "params": [
     {
       "name": "zoom_level",
-      "value": 1400,
+      "value": 1600,
       "bind": {
         "input": "range",
         "min": 800,
@@ -25,32 +25,19 @@
     },
     {
       "name": "center_to",
-      "value": [
-        136,
-        -36
-      ],
+      "value": [136, -37],
       "bind": {
         "input": "select",
         "options": [
-          [
-            136,
-            -36
-          ],
-          [
-            142.6,
-            -35.2
-          ],
-          [
-            115.3,
-            -33.9
-          ],
-          [
-            146.8,
-            -42
-          ]
+          [136, -37],
+          [141.8, -37.8],
+          [142.6, -35.2],
+          [115.3, -33.9],
+          [146.8, -42]
         ],
         "labels": [
           "All wine regions",
+          "South East and Tasmania",
           "South East",
           "Margaret River",
           "Tasmania"
@@ -65,33 +52,17 @@
       "height": 500,
       "projection": {
         "type": "conicEqualArea",
-        "parallels": [
-          -18,
-          -36
-        ],
-        "rotate": [
-          -134,
-          0
-        ],
-        "scale": {
-          "expr": "zoom_level"
-        },
-        "translate": [
-          380,
-          250
-        ],
-        "center": {
-          "expr": "[center_to[0] - 134, center_to[1]]"
-        }
+        "parallels": [-18, -36],
+        "rotate": [-134, 0],
+        "scale": {"expr": "zoom_level"},
+        "translate": [380, 250],
+        "center": {"expr": "[center_to[0] - 134, center_to[1]]"}
       },
       "layer": [
         {
           "data": {
             "url": "https://raw.githubusercontent.com/ooihuiyi/FIT3179-DV2-aus-wine/refs/heads/main/js/STE_2026_AUST_GDA2020.json",
-            "format": {
-              "type": "topojson",
-              "feature": "aus_states"
-            }
+            "format": {"type": "topojson", "feature": "aus_states"}
           },
           "mark": {
             "type": "geoshape",
@@ -111,21 +82,9 @@
         {
           "data": {
             "values": [
-              {
-                "lon": 139.25,
-                "lat": -36.05,
-                "t": "SOUTH|AUSTRALIA"
-              },
-              {
-                "lon": 143.3,
-                "lat": -34.45,
-                "t": "NEW SOUTH|WALES"
-              },
-              {
-                "lon": 143.8,
-                "lat": -37.2,
-                "t": "VICTORIA"
-              }
+              {"lon": 139.25, "lat": -36.05, "t": "SOUTH|AUSTRALIA"},
+              {"lon": 143.3, "lat": -34.45, "t": "NEW SOUTH|WALES"},
+              {"lon": 143.8, "lat": -37.2, "t": "VICTORIA"}
             ]
           },
           "mark": {
@@ -136,22 +95,12 @@
             "color": "#9a9a9a",
             "clip": true,
             "align": "left",
-            "opacity": {
-              "expr": "zoom_level >= 2500 ? 1 : 0"
-            }
+            "opacity": {"expr": "zoom_level >= 2200 ? 1 : 0"}
           },
           "encoding": {
-            "longitude": {
-              "field": "lon",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "lat",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "t"
-            }
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
+            "text": {"field": "t"}
           }
         },
         {
@@ -162,26 +111,11 @@
                 "geometry": {
                   "type": "LineString",
                   "coordinates": [
-                    [
-                      139,
-                      -33.45
-                    ],
-                    [
-                      139,
-                      -33.1
-                    ],
-                    [
-                      143,
-                      -32.9
-                    ],
-                    [
-                      146.9,
-                      -32.62
-                    ],
-                    [
-                      146.94,
-                      -32.97
-                    ]
+                    [139, -33.45],
+                    [139, -33.1],
+                    [143, -32.9],
+                    [146.9, -32.62],
+                    [146.94, -32.97]
                   ]
                 }
               }
@@ -193,9 +127,7 @@
             "stroke": "#333",
             "strokeWidth": 1,
             "clip": true,
-            "opacity": {
-              "expr": "zoom_level >= 2500 ? 1 : 0"
-            }
+            "opacity": {"expr": "zoom_level >= 2200 ? 1 : 0"}
           }
         },
         {
@@ -218,22 +150,43 @@
             "color": "#333",
             "clip": true,
             "align": "left",
-            "opacity": {
-              "expr": "zoom_level >= 2500 ? 1 : 0"
-            }
+            "opacity": {"expr": "zoom_level >= 2200 ? 1 : 0"}
           },
           "encoding": {
-            "longitude": {
-              "field": "lon",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "lat",
-              "type": "quantitative"
-            },
-            "text": {
-              "field": "text"
-            }
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
+            "text": {"field": "text"}
+          }
+        },
+        {
+          "data": {
+            "values": [
+              {
+                "lon": 131,
+                "lat": -28.9,
+                "text": [
+                  "The three large pale circles are Riverland,",
+                  "Murray Darling and Riverina: 62% of the",
+                  "national crush, but under $370 a tonne",
+                  "(national average $570)."
+                ]
+              }
+            ]
+          },
+          "mark": {
+            "type": "text",
+            "fontSize": 12,
+            "fontStyle": "italic",
+            "color": "#333",
+            "clip": true,
+            "align": "left",
+            "lineHeight": 15,
+            "opacity": {"expr": "zoom_level < 2200 ? 1 : 0"}
+          },
+          "encoding": {
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
+            "text": {"field": "text"}
           }
         },
         {
@@ -247,9 +200,7 @@
                   "name": "hover",
                   "select": {
                     "type": "point",
-                    "fields": [
-                      "region"
-                    ],
+                    "fields": ["region"],
                     "on": "pointerover[event.item && event.item.datum && isValid(event.item.datum.region)]",
                     "clear": "pointerout"
                   }
@@ -263,31 +214,15 @@
                 "cursor": "pointer"
               },
               "encoding": {
-                "longitude": {
-                  "field": "longitude",
-                  "type": "quantitative"
-                },
-                "latitude": {
-                  "field": "latitude",
-                  "type": "quantitative"
-                },
+                "longitude": {"field": "longitude", "type": "quantitative"},
+                "latitude": {"field": "latitude", "type": "quantitative"},
                 "size": {
                   "field": "crush_2026_tonnes",
                   "type": "quantitative",
                   "title": "Crush 2026 (tonnes)",
-                  "scale": {
-                    "zero": true,
-                    "range": [
-                      0,
-                      4000
-                    ]
-                  },
+                  "scale": {"zero": true, "range": [0, 4000]},
                   "legend": {
-                    "values": [
-                      50000,
-                      150000,
-                      300000
-                    ],
+                    "values": [50000, 150000, 300000],
                     "format": ",.0f",
                     "symbolFillColor": "white",
                     "symbolStrokeColor": "#555",
@@ -303,81 +238,35 @@
                   "field": "value_per_tonne",
                   "type": "quantitative",
                   "title": "Grape price ($ per tonne, log scale)",
-                  "scale": {
-                    "type": "log",
-                    "range": [
-                      "#c6dbef",
-                      "#08306b"
-                    ]
-                  },
+                  "scale": {"type": "log", "range": ["#c6dbef", "#08306b"]},
                   "legend": {
                     "orient": "none",
                     "direction": "horizontal",
                     "gradientLength": 230,
                     "format": "$,.0f",
-                    "values": [
-                      300,
-                      1000,
-                      3870
-                    ],
+                    "values": [300, 1000, 3870],
                     "legendX": 780,
                     "legendY": 0
                   }
                 },
                 "opacity": {
-                  "condition": {
-                    "param": "hover",
-                    "empty": true,
-                    "value": 0.9
-                  },
+                  "condition": {"param": "hover", "empty": true, "value": 0.9},
                   "value": 0.3
                 },
-                "order": {
-                  "field": "crush_2026_tonnes",
-                  "sort": "descending"
-                },
+                "order": {"field": "crush_2026_tonnes", "sort": "descending"},
                 "tooltip": [
-                  {
-                    "field": "region",
-                    "type": "nominal",
-                    "title": "Region"
-                  },
-                  {
-                    "field": "state_name",
-                    "type": "nominal",
-                    "title": "State"
-                  },
-                  {
-                    "field": "zone_type",
-                    "type": "nominal",
-                    "title": "Zone"
-                  },
-                  {
-                    "field": "crush_2026_tonnes",
-                    "type": "quantitative",
-                    "format": ",.0f",
-                    "title": "Crush 2026 (tonnes)"
-                  },
-                  {
-                    "field": "value_per_tonne",
-                    "type": "quantitative",
-                    "format": "$,.0f",
-                    "title": "Average grape price ($ per tonne)"
-                  },
-                  {
-                    "field": "percentage_change",
-                    "type": "quantitative",
-                    "format": "+.1f",
-                    "title": "Crush change from 2025 (%)"
-                  }
+                  {"field": "region", "type": "nominal", "title": "Region"},
+                  {"field": "state_name", "type": "nominal", "title": "State"},
+                  {"field": "zone_type", "type": "nominal", "title": "Zone"},
+                  {"field": "crush_2026_tonnes", "type": "quantitative", "format": ",.0f", "title": "Crush 2026 (tonnes)"},
+                  {"field": "value_per_tonne", "type": "quantitative", "format": "$,.0f", "title": "Average grape price ($ per tonne)"},
+                  {"field": "percentage_change", "type": "quantitative", "format": "+.1f", "title": "Crush change from 2025 (%)"}
                 ]
               }
             },
             {
               "transform": [
-                {
-                  "filter": "datum.zone_type == 'Warm inland' && datum.region != 'Murray Darling - Swan Hill'"
-                }
+                {"filter": "datum.zone_type == 'Warm inland' && datum.region != 'Murray Darling - Swan Hill'"}
               ],
               "mark": {
                 "type": "text",
@@ -386,29 +275,17 @@
                 "color": "#08306b",
                 "clip": true,
                 "baseline": "middle",
-                "opacity": {
-                  "expr": "zoom_level >= 2500 ? 1 : 0"
-                }
+                "opacity": {"expr": "zoom_level >= 2200 ? 1 : 0"}
               },
               "encoding": {
-                "longitude": {
-                  "field": "longitude",
-                  "type": "quantitative"
-                },
-                "latitude": {
-                  "field": "latitude",
-                  "type": "quantitative"
-                },
-                "text": {
-                  "field": "region"
-                }
+                "longitude": {"field": "longitude", "type": "quantitative"},
+                "latitude": {"field": "latitude", "type": "quantitative"},
+                "text": {"field": "region"}
               }
             },
             {
               "transform": [
-                {
-                  "filter": "datum.region == 'Murray Darling - Swan Hill'"
-                }
+                {"filter": "datum.region == 'Murray Darling - Swan Hill'"}
               ],
               "mark": {
                 "type": "text",
@@ -419,32 +296,17 @@
                 "baseline": "middle",
                 "lineHeight": 13,
                 "dy": -6.5,
-                "opacity": {
-                  "expr": "zoom_level >= 2500 ? 1 : 0"
-                }
+                "opacity": {"expr": "zoom_level >= 2200 ? 1 : 0"}
               },
               "encoding": {
-                "longitude": {
-                  "field": "longitude",
-                  "type": "quantitative"
-                },
-                "latitude": {
-                  "field": "latitude",
-                  "type": "quantitative"
-                },
-                "text": {
-                  "value": [
-                    "Murray",
-                    "Darling"
-                  ]
-                }
+                "longitude": {"field": "longitude", "type": "quantitative"},
+                "latitude": {"field": "latitude", "type": "quantitative"},
+                "text": {"value": ["Murray", "Darling"]}
               }
             },
             {
               "transform": [
-                {
-                  "filter": "datum.region == 'Barossa Valley'"
-                }
+                {"filter": "datum.region == 'Barossa Valley'"}
               ],
               "mark": {
                 "type": "text",
@@ -454,29 +316,17 @@
                 "fontSize": 12,
                 "color": "#333",
                 "clip": true,
-                "opacity": {
-                  "expr": "zoom_level >= 2500 ? 1 : 0"
-                }
+                "opacity": {"expr": "zoom_level >= 2200 ? 1 : 0"}
               },
               "encoding": {
-                "longitude": {
-                  "field": "longitude",
-                  "type": "quantitative"
-                },
-                "latitude": {
-                  "field": "latitude",
-                  "type": "quantitative"
-                },
-                "text": {
-                  "field": "region"
-                }
+                "longitude": {"field": "longitude", "type": "quantitative"},
+                "latitude": {"field": "latitude", "type": "quantitative"},
+                "text": {"field": "region"}
               }
             },
             {
               "transform": [
-                {
-                  "filter": "datum.region == 'McLaren Vale'"
-                }
+                {"filter": "datum.region == 'McLaren Vale'"}
               ],
               "mark": {
                 "type": "text",
@@ -486,29 +336,17 @@
                 "fontSize": 12,
                 "color": "#333",
                 "clip": true,
-                "opacity": {
-                  "expr": "zoom_level >= 2500 ? 1 : 0"
-                }
+                "opacity": {"expr": "zoom_level >= 2200 ? 1 : 0"}
               },
               "encoding": {
-                "longitude": {
-                  "field": "longitude",
-                  "type": "quantitative"
-                },
-                "latitude": {
-                  "field": "latitude",
-                  "type": "quantitative"
-                },
-                "text": {
-                  "field": "region"
-                }
+                "longitude": {"field": "longitude", "type": "quantitative"},
+                "latitude": {"field": "latitude", "type": "quantitative"},
+                "text": {"field": "region"}
               }
             },
             {
               "transform": [
-                {
-                  "filter": "datum.region == 'Margaret River'"
-                }
+                {"filter": "datum.region == 'Margaret River'"}
               ],
               "mark": {
                 "type": "text",
@@ -520,24 +358,14 @@
                 "clip": true
               },
               "encoding": {
-                "longitude": {
-                  "field": "longitude",
-                  "type": "quantitative"
-                },
-                "latitude": {
-                  "field": "latitude",
-                  "type": "quantitative"
-                },
-                "text": {
-                  "field": "region"
-                }
+                "longitude": {"field": "longitude", "type": "quantitative"},
+                "latitude": {"field": "latitude", "type": "quantitative"},
+                "text": {"field": "region"}
               }
             },
             {
               "transform": [
-                {
-                  "filter": "datum.region == 'Tasmania'"
-                }
+                {"filter": "datum.region == 'Tasmania'"}
               ],
               "mark": {
                 "type": "text",
@@ -551,32 +379,15 @@
                 "lineHeight": 15
               },
               "encoding": {
-                "longitude": {
-                  "field": "longitude",
-                  "type": "quantitative"
-                },
-                "latitude": {
-                  "field": "latitude",
-                  "type": "quantitative"
-                },
-                "text": {
-                  "value": [
-                    "Tasmania earns the most",
-                    "per tonne ($3,870)"
-                  ]
-                }
+                "longitude": {"field": "longitude", "type": "quantitative"},
+                "latitude": {"field": "latitude", "type": "quantitative"},
+                "text": {"value": ["Tasmania earns the most", "per tonne ($3,870)"]}
               }
             }
           ]
         },
         {
-          "data": {
-            "values": [
-              {
-                "t": "How to read this map"
-              }
-            ]
-          },
+          "data": {"values": [{"t": "How to read this map"}]},
           "mark": {
             "type": "text",
             "align": "left",
@@ -587,11 +398,7 @@
             "fontWeight": 600,
             "color": "#232027"
           },
-          "encoding": {
-            "text": {
-              "field": "t"
-            }
-          }
+          "encoding": {"text": {"field": "t"}}
         },
         {
           "data": {
@@ -616,11 +423,7 @@
             "lineHeight": 18,
             "color": "#3a3640"
           },
-          "encoding": {
-            "text": {
-              "field": "t"
-            }
-          }
+          "encoding": {"text": {"field": "t"}}
         }
       ]
     },
@@ -628,11 +431,7 @@
       "width": 760,
       "height": 14,
       "data": {
-        "values": [
-          {
-            "t": "Source: Wine Australia, National Vintage Report 2026"
-          }
-        ]
+        "values": [{"t": "Source: Wine Australia, National Vintage Report 2026"}]
       },
       "mark": {
         "type": "text",
@@ -642,15 +441,9 @@
         "color": "#666"
       },
       "encoding": {
-        "x": {
-          "value": 0
-        },
-        "y": {
-          "value": 0
-        },
-        "text": {
-          "field": "t"
-        }
+        "x": {"value": 0},
+        "y": {"value": 0},
+        "text": {"field": "t"}
       }
     }
   ],
